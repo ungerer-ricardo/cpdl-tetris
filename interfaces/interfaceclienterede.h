@@ -8,23 +8,12 @@ class InterfaceClienteRede : public QObject
     Q_OBJECT
 
     signals:
-        void
-        EnviaPecas(qint16);
-
-        void
-        EnviaGameOver();
-
-        void
-        EnviaChat(QString);
-
-        void
-        EnviaEncaixe();
-
-        void
-        EnviaTecla(qint16);
-
-        void
-        EnviaStart();
+        void EnviaPecas(qint16);
+        void EnviaGameOver();
+        void EnviaChat(QString);
+        void EnviaEncaixe();
+        void EnviaTecla(qint16);
+        void EnviaStart();
 
         void
         RecebePecas(qint16);
