@@ -1,0 +1,46 @@
+#ifndef ROTEADOR_H
+#define ROTEADOR_H
+
+#include <QList>
+#include <QObject>
+
+
+#include "./jogador.h"
+#include "./ouvinte.h"
+#include "../lib/tradutor.h"
+
+class Roteador : public QObject
+{
+    Q_OBJECT
+public:
+
+    Roteador( QObject* _parent = 0 );
+
+    ~Roteador();
+
+public slots:
+
+    void
+    novoJogador( Jogador* _novo_jogador );
+
+    void
+    recebeDado( QByteArray _dado );
+
+protected:
+
+    void
+    processaComando( ComandoParseado& _comando );
+
+    void
+    broadcast( QByteArray* _dado );
+
+private:
+
+    QList<Jogador*>
+    listaJogadores;
+
+    Ouvinte*
+    ouvinte;
+};
+
+#endif // ROTEADOR_H
