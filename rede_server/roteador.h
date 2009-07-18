@@ -4,7 +4,6 @@
 #include <QList>
 #include <QObject>
 
-
 #include "./jogador.h"
 #include "./ouvinte.h"
 #include "../lib/tradutor.h"
@@ -18,6 +17,11 @@ public:
 
     ~Roteador();
 
+signals:
+
+    void
+    broadcast( QByteArray& _dado );
+
 public slots:
 
     void
@@ -30,9 +34,6 @@ protected:
 
     void
     processaComando( ComandoParseado& _comando );
-
-    void
-    broadcast( QByteArray* _dado );
 
 private:
 
