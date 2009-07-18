@@ -7,6 +7,8 @@
 Ouvinte::Ouvinte( Roteador* _parent )
         : QTcpServer( _parent )
 {
+    this->setParent(_parent);
+
     QObject::connect(this, SIGNAL(novoJogador(Jogador*)),
                      _parent, SLOT(novoJogador(Jogador*)));
 }
@@ -42,10 +44,9 @@ Ouvinte::incomingConnection( int _socket_descriptor )
     Jogador*
     novo_jogador;
 
-    novo_jogador = new Jogador( _socket_descriptor, this->parent() );
+    novo_jogador = new Jogador( _socket_descriptor, 0 );
 
-    QObject::connect( novo_jogador, SIGNAL(novoDado(QByteArray)),
-                      this->parent(), SLOT(recebeDado(QByteArray)));
+    novo_jogador->start();
 
     emit this->novoJogador( novo_jogador );
 }

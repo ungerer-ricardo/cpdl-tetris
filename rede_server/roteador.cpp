@@ -20,6 +20,7 @@ void
 Roteador::novoJogador( Jogador* _novo_jogador )
 {
     qDebug() << "Roteador: Novo jogador conectado!!";
+    QByteArray boga("boga boga boga");
 
     this->listaJogadores.push_back( _novo_jogador );
 }
@@ -32,12 +33,6 @@ Roteador::recebeDado( QByteArray _dado )
 
 void
 Roteador::processaComando( ComandoParseado& _comando )
-{
-
-}
-
-void
-Roteador::broadcast( QByteArray* _dado )
 {
 
 }
