@@ -1,56 +1,74 @@
 #ifndef JOGADOR_H
 #define JOGADOR_H
 
+#include <QList>
 #include <QMutex>
+#include <QSemaphore>
 #include <QTcpSocket>
 #include <QThread>
 
-class Roteador;
 
-class Jogador : public QThread
+namespace Rede_Server
 {
-    Q_OBJECT
-public:
 
-    Jogador( int _socket_descriptor, QObject* _parent = 0 );
+    class Roteador;
 
-    ~Jogador();
+    class Jogador : public QThread
+    {
+        Q_OBJECT
+    public:
 
-    void
-    run();
+        Jogador( int _socket_descriptor, QObject* _parent = 0 );
 
-signals:
+        ~Jogador();
 
-    void
-    novoDado( QByteArray _dado );
+        void
+        run();
 
-    void
-    erro();
+    signals:
 
-public slots:
+        void
+        novoDado( QByteArray _dado );
 
-    void
-    leNovoDadoRede();
+        void
+        erro();
 
-    void
-    erroConexao( QAbstractSocket::SocketError _erro );
+    public slots:
 
-    void
-    enviaDado( QByteArray& _dado );
+        void
+        leNovoDadoRede();
 
-private:
+        void
+        erroConexao( QAbstractSocket::SocketError _erro );
 
-    QTcpSocket*
-    conexao;
+        void
+        enviaDado( QByteArray& _dado );
 
-    QMutex
-    nao_enviado_mutex;
+    protected:
 
-    QThread*
-    filha;
+        void
+        writeNetwork( QByteArray _dado );
 
-    int
-    socket_descriptor;
+    private:
+
+        QTcpSocket*
+        conexao;
+
+        int
+        socket_descriptor;
+
+        QList<QByteArray>
+        caixa_saida;
+
+        QSemaphore*
+        sem_caixa_saida;
+
+        bool
+        quit;
+
+        QMutex
+        m_quit;
+    };
 };
 
 #endif // JOGADOR_H

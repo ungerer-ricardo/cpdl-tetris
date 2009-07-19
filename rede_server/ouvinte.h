@@ -8,28 +8,31 @@
 
 #include "./jogador.h"
 
-class Roteador;
-
-class Ouvinte : public QTcpServer
+namespace Rede_Server
 {
-    Q_OBJECT
-public:
-    Ouvinte( Roteador* _parent = NULL );
+    class Roteador;
 
-    ~Ouvinte();
+    class Ouvinte : public QTcpServer
+    {
+        Q_OBJECT
+    public:
+        Ouvinte( Roteador* _parent = NULL );
 
-    bool
-    startListen();
+        ~Ouvinte();
 
-signals:
+        bool
+        startListen();
 
-    void
-    novoJogador( Jogador* _jogador );
+    signals:
 
-protected:
+        void
+        novoJogador( Jogador* _jogador );
 
-    void
-    incomingConnection ( int _socket_descriptor );
-};
+    protected:
 
+        void
+        incomingConnection ( int _socket_descriptor );
+    };
+
+}
 #endif // OUVINTE_H

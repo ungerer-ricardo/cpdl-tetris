@@ -30,7 +30,10 @@ public:
     Tradutor( QObject* _parent = 0 );
 
     ComandoParseado
-    traduzir( QByteArray _dado );
+    traduzir( QByteArray& _dado );
+
+    QByteArray
+    traduzir( ComandoParseado& _comando );
 };
 
 #endif // TRADUTOR_H

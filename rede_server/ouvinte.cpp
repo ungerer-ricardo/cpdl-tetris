@@ -4,6 +4,8 @@
 
 #include "./roteador.h"
 
+using namespace Rede_Server;
+
 Ouvinte::Ouvinte( Roteador* _parent )
         : QTcpServer( _parent )
 {
