@@ -8,30 +8,38 @@ class InterfaceClienteRede : public QObject
     Q_OBJECT
 
     signals:
-        void EnviaPecas(qint16);
-        void EnviaGameOver();
-        void EnviaChat(QString);
-        void EnviaEncaixe();
-        void EnviaTecla(qint16);
-        void EnviaStart();
+    	//cliente envia
+	void queropeca();
 
-        void
-        RecebePecas(qint16);
+    	//rede envia
+    	void tomapeca( Peca , int jogador );
 
-        void
-        RecebeGameOver();
+	//cliente envia
+	void butao( Comando , int jogador );
 
-        void
-        RecebeChat(QString);
+	//cliente envia
+	void enviamensagem( QString );
 
-        void
-        RecebeEncaixe();
+	//rede envia
+	void recebemensagem( Mensagem );
 
-        void
-        RecebeTecla(qint16);
+	//rede envia
+	void recebecomando( Comando );
 
-        void
-        RecebeStart();
+	//cliente envia
+	void gameover( int pontuacao );
+
+	//rede envia
+	void jogadorcaiu( int jogador );
+
+	//rede envia
+	void conexaobemsucedida( int total , int quemsoueu);
+
+	//rede
+	void novoplayer();
+
+	//rede envia
+	void start(Peca primeira, Peca segunda );
 };
 
 #endif // INTERFACECLIENTEREDE_H
