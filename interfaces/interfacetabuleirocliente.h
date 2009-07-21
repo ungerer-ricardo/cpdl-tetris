@@ -3,21 +3,21 @@
 
 #include <QObject>
 
-class TabuleiroCliente
+class TabuleiroCliente : public QObject
 {
 	Q_OBJECT
 signals:
-	void encaixe( Peca );
-
-	void rotacionapeca();
-
-	//true -> direita
-	//false -> esquerda
-	void movepeca(bool _direcao);
-
-	void startjogo( Peca descendo, Peca proxima);
-
-	void gameover( int pontuacao );
+//	void encaixe( Peca );
+//
+//	void rotacionapeca();
+//
+//	//true -> direita
+//	//false -> esquerda
+//	void movepeca(bool _direcao);
+//
+//	void startjogo( Peca descendo, Peca proxima);
+//
+//	void gameover( int pontuacao );
 }
  
 #endif TABULEIROCLIENTE_H_
