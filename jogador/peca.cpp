@@ -3,12 +3,9 @@
 
 Tabuleiro::Peca::Peca(qint8 _idPeca, QWidget* _parent) : QWidget::QWidget(_parent)
 {
-    this->peca.push_back(Xy(0,-1));
-    this->peca.push_back(Xy(0,0));
-    this->peca.push_back(Xy(-1,0));
-    this->peca.push_back(Xy(-1,1));
+    this->peca = Tabuleiro::MapaPecas::MeDaOMapa( )->ComoEhAPeca( _idPeca );
 
-    this->tipoPecaInt = 2;
+    this->tipoPecaInt = _idPeca;
 }
 
 void

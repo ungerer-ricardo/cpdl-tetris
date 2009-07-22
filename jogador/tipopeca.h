@@ -12,39 +12,58 @@ namespace Tabuleiro
     typedef QVector<Xy>
     TipoPeca;
 
-/*    class TipoPeca
+    class MapaPecas
     {
-        QVector<peca>
-        mapaPecas;
-        
-        TipoPeca( )
-        {
+        public:
+            static MapaPecas*
+            MeDaOMapa( );
 
-            peca
-            noShape = {(xy(0,0),    xy(0,0),    xy(0,0),    xy(0,0))};
+            const TipoPeca
+            ComoEhAPeca( int );
 
-            peca
-            zShape = {xy(0,-1),   xy(0,0),    xy(-1,0),   xy(-1,1)};
+        protected:
+            MapaPecas( );
 
-            peca
-            sShape = {xy(0,-1),   xy(0,0),    xy(1,0),    xy(1,1)};
+            MapaPecas&
+            operator=( MapaPecas const& );
 
-            peca
-            lineShape = {xy(0,-1),   xy(0,0),    xy(0,1),    xy(0,2)};
+            virtual
+            ~MapaPecas( );
 
-            peca
-            tShape = {xy(-1,0),   xy(0,0),    xy(1,0),    xy(0,1)};
+        private:
+            static MapaPecas*
+            instancia;
 
-            peca
-            squareShape = {xy(0,0),    xy(1,0),    xy(0,1),    xy(1,1)};
+            QVector<TipoPeca>
+            pecas;
 
-            peca
-            lShape = {xy(-1,-1),  xy(0,-1),   xy(0,0),    xy(0,1)};
+            void
+            populaMapa( );
 
-            peca
-            mirroredLShape = {xy(1,-1),   xy(0,-1),   xy(0,0),    xy(0,1)};
+            TipoPeca
+            criaPecaVazia( );
 
-        }
-    }    */
+            TipoPeca
+            criaPecaZ( );
+
+            TipoPeca
+            criaPecaS( );
+
+            TipoPeca
+            criaPecaLinha( );
+
+            TipoPeca
+            criaPecaT( );
+
+            TipoPeca
+            criaPecaQuadrado( );
+
+            TipoPeca
+            criaPecaL( );
+
+            TipoPeca
+            criaPecaJ( );
+    };
 }
+
 #endif // TIPOPECA_H

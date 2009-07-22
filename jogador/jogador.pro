@@ -5,7 +5,8 @@ TARGET = jogador
 TEMPLATE = app
 SOURCES += main.cpp \
     peca.cpp \
-    pecinha.cpp
+    pecinha.cpp \
+    tipopeca.cpp
 HEADERS += peca.h \
     tipopeca.h \
     pecinha.h
