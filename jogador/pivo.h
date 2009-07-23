@@ -3,6 +3,7 @@
 
 #include <QPair>
 #include <QWidget>
+#include <QVector>
 
 #include "tipopeca.h"
 #include "pecinha.h"
@@ -10,12 +11,12 @@
 
 namespace Tabuleiro
 {
-    class Pivo : public Pecinha
+    class Pivo : public Tabuleiro::Pecinha
     {
         Q_OBJECT
 
         public:
-            Pivo(qint8 = 0);
+            Pivo(qint8, QString);
             
         public slots:
             void
@@ -31,11 +32,14 @@ namespace Tabuleiro
             Tabuleiro::TipoPeca
             peca;
             
-            QVector<Pecinha>
+            QVector<Tabuleiro::Pecinha*>
             agregadas;
 
             QString
             cor;
+
+            void
+            configuraAgregados( );
 
             void
             desenha();
