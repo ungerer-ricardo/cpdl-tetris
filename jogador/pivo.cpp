@@ -1,7 +1,7 @@
 #include "pivo.h"
 
 
-Tabuleiro::Pivo::Pivo(qint8 _idPeca, QString _cor) : Pecinha(_cor)
+Tabuleiro::Pivo::Pivo( qint8 _idPeca, QString _cor ) : Pecinha( _cor )
 {
     this->peca = Tabuleiro::MapaPecas::MeDaOMapa( )->ComoEhAPeca( _idPeca );
 
@@ -11,6 +11,11 @@ Tabuleiro::Pivo::Pivo(qint8 _idPeca, QString _cor) : Pecinha(_cor)
     {
         this->configuraAgregados( );
     }
+}
+
+Tabuleiro::Pivo::~Pivo( )
+{
+
 }
 
 void
@@ -33,15 +38,25 @@ Tabuleiro::Pivo::configuraAgregados( )
  * tem q retornar a nova posicao
  */
 void
-Tabuleiro::Pivo::rotaciona()
+Tabuleiro::Pivo::rotaciona( )
 {
+    Tabuleiro::Xy
+    coordenadaPecinha;
+
+    Tabuleiro::TipoPeca
+    novasPosicoes;
+
     if( this->tipoPecaInt != 0 )
     {
-        for( TipoPeca::iterator i = this->peca.begin(); i != this->peca.end(); ++i )
+        foreach( coordenadaPecinha, this->peca )
         {
-            i->first = i->second;
-            i->second = -i->first;
+            novasPosicoes << Xy( coordenadaPecinha.second, -coordenadaPecinha.first );
         }
+
+//        if( this->MapaBits->possoColocarAqui(novasPosicoes, this->ondeEuTo) )
+//        {
+//            this->peca = novasPosicoes;
+//        }
     }
 }
 

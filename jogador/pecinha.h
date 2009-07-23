@@ -14,7 +14,7 @@ namespace Tabuleiro
     class Pecinha : public QPushButton
     {
         public:
-            Pecinha(QString, Tabuleiro::Pecinha* = 0, Tabuleiro::Xy* = 0, QWidget* _parent = 0);
+            Pecinha( QString, Tabuleiro::Pecinha* = 0, Tabuleiro::Xy const* = 0, QWidget* _parent = 0 );
 
         private:
             Tabuleiro::Pecinha*

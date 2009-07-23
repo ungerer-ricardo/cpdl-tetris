@@ -16,14 +16,16 @@ namespace Tabuleiro
         Q_OBJECT
 
         public:
-            Pivo(qint8, QString);
-            
+            Pivo( qint8, QString );
+
+            ~Pivo( );
+
         public slots:
             void
-            rotaciona();
+            rotaciona( );
 
             void
-            desce();
+            desce( );
 
         private:
             qint8
@@ -37,6 +39,9 @@ namespace Tabuleiro
 
             QString
             cor;
+
+            Tabuleiro::CoordenadaMapaBits
+            ondeEuTo;
 
             void
             configuraAgregados( );

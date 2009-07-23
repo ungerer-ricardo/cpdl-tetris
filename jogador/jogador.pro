@@ -6,8 +6,10 @@ TEMPLATE = app
 SOURCES += main.cpp \
     pivo.cpp \
     pecinha.cpp \
-    tipopeca.cpp
+    tipopeca.cpp \
+    mapabits.cpp
 HEADERS += pivo.h \
     tipopeca.h \
     pecinha.h \
-    basicos.h
+    basicos.h \
+    mapabits.h
