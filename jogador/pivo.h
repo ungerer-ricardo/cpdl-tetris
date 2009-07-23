@@ -10,12 +10,12 @@
 
 namespace Tabuleiro
 {
-    class Peca : public QWidget
+    class Pivo : public Pecinha
     {
         Q_OBJECT
 
         public:
-            Peca(qint8 = 0, QWidget* _parent = 0);
+            Pivo(qint8 = 0);
             
         public slots:
             void
@@ -28,14 +28,14 @@ namespace Tabuleiro
             qint8
             tipoPecaInt;
 
-            TipoPeca
+            Tabuleiro::TipoPeca
             peca;
             
+            QVector<Pecinha>
+            agregadas;
+
             QString
             cor;
-            
-            QVector<Pecinha>
-            visualizacao;
 
             void
             desenha();

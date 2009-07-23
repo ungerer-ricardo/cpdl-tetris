@@ -7,12 +7,21 @@
 #include <QCheckBox>
 #include <QLineEdit>
 
+#include "tipopeca.h"
+
 namespace Tabuleiro
 {
     class Pecinha : public QPushButton
     {
         public:
             Pecinha(QWidget* _parent = 0);
+
+        private:
+            Pecinha*
+            pivo;
+
+            Tabuleiro::TipoPeca*
+            posicaoRelativa;
     };
 }
 

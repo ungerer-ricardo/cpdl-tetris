@@ -1,7 +1,7 @@
-#include "peca.h"
+#include "pivo.h"
 
 
-Tabuleiro::Peca::Peca(qint8 _idPeca, QWidget* _parent) : QWidget::QWidget(_parent)
+Tabuleiro::Pivo::Pivo(qint8 _idPeca)
 {
     this->peca = Tabuleiro::MapaPecas::MeDaOMapa( )->ComoEhAPeca( _idPeca );
 
@@ -9,7 +9,7 @@ Tabuleiro::Peca::Peca(qint8 _idPeca, QWidget* _parent) : QWidget::QWidget(_paren
 }
 
 void
-Tabuleiro::Peca::rotaciona()
+Tabuleiro::Pivo::rotaciona()
 {
     if( this->tipoPecaInt != 0 )
     {
@@ -22,13 +22,13 @@ Tabuleiro::Peca::rotaciona()
 }
 
 void
-Tabuleiro::Peca::desce()
+Tabuleiro::Pivo::desce()
 {
 
 };
 
 void
-Tabuleiro::Peca::desenha()
+Tabuleiro::Pivo::desenha()
 {
 
 }

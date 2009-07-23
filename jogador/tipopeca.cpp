@@ -16,7 +16,13 @@ Tabuleiro::MapaPecas::MeDaOMapa( )
 }
 
 const Tabuleiro::TipoPeca
-Tabuleiro::MapaPecas::ComoEhAPeca( int _id )
+Tabuleiro::MapaPecas::operator[]( const int _id )
+{
+    return this->ComoEhAPeca( _id );
+}
+
+const Tabuleiro::TipoPeca
+Tabuleiro::MapaPecas::ComoEhAPeca( const int _id )
 {
     return this->pecas[_id];
 }

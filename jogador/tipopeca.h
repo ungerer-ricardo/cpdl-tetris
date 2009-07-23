@@ -3,23 +3,23 @@
 
 #include <QPair>
 #include <QVector>
+#include <QSize>
+
+#include "basicos.h"
 
 namespace Tabuleiro
 {
-    typedef QPair<qint8, qint8>
-    Xy;
-
-    typedef QVector<Xy>
-    TipoPeca;
-
     class MapaPecas
     {
         public:
             static MapaPecas*
             MeDaOMapa( );
 
-            const TipoPeca
-            ComoEhAPeca( int );
+            const Tabuleiro::TipoPeca
+            ComoEhAPeca( const int );
+
+            const Tabuleiro::TipoPeca
+            operator[]( const int );
 
         protected:
             MapaPecas( );
@@ -34,34 +34,34 @@ namespace Tabuleiro
             static MapaPecas*
             instancia;
 
-            QVector<TipoPeca>
+            QVector<Tabuleiro::TipoPeca>
             pecas;
 
             void
             populaMapa( );
 
-            TipoPeca
+            Tabuleiro::TipoPeca
             criaPecaVazia( );
 
-            TipoPeca
+            Tabuleiro::TipoPeca
             criaPecaZ( );
 
-            TipoPeca
+            Tabuleiro::TipoPeca
             criaPecaS( );
 
-            TipoPeca
+            Tabuleiro::TipoPeca
             criaPecaLinha( );
 
-            TipoPeca
+            Tabuleiro::TipoPeca
             criaPecaT( );
 
-            TipoPeca
+            Tabuleiro::TipoPeca
             criaPecaQuadrado( );
 
-            TipoPeca
+            Tabuleiro::TipoPeca
             criaPecaL( );
 
-            TipoPeca
+            Tabuleiro::TipoPeca
             criaPecaJ( );
     };
 }

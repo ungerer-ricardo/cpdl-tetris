@@ -4,9 +4,10 @@
 TARGET = jogador
 TEMPLATE = app
 SOURCES += main.cpp \
-    peca.cpp \
+    pivo.cpp \
     pecinha.cpp \
     tipopeca.cpp
-HEADERS += peca.h \
+HEADERS += pivo.h \
     tipopeca.h \
-    pecinha.h
+    pecinha.h \
+    basicos.h
