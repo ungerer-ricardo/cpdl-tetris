@@ -2,10 +2,12 @@
 #define PECA_H
 
 #include <QPair>
-#include <QWidget>
+#include <QPoint>
+#include <QTimer>
 #include <QVector>
+#include <QWidget>
 
-#include "tipopeca.h"
+#include "mapapecas.h"
 #include "pecinha.h"
 
 
@@ -16,7 +18,7 @@ namespace Tabuleiro
         Q_OBJECT
 
         public:
-            Pivo( qint8, QString );
+            Pivo( qint8, QColor, Tabuleiro::XyView, QWidget* _parent );
 
             ~Pivo( );
 
@@ -27,7 +29,17 @@ namespace Tabuleiro
             void
             desce( );
 
+        signals:
+            void
+            mudou( Tabuleiro::XyView );
+
         private:
+            QTimer*
+            timer;
+
+            QTimer*
+            timer2;
+
             qint8
             tipoPecaInt;
 
@@ -42,6 +54,9 @@ namespace Tabuleiro
 
             Tabuleiro::CoordenadaMapaBits
             ondeEuTo;
+
+            Tabuleiro::XyView
+            ondeEuToExibido;
 
             void
             configuraAgregados( );

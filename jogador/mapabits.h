@@ -21,13 +21,16 @@ namespace Tabuleiro
         protected:
 
             /*
-             * mapa[coluna][linha]
+             * mapa[linha][coluna]
              */
             QVector< QVector<Tabuleiro::Pecinha*> >
             mapa;
 
             void
             defineTamanho( unsigned short int, unsigned short int );
+
+            bool
+            temGenteAqui( unsigned int, unsigned int );
     };
 }
 

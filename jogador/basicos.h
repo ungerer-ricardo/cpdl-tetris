@@ -1,6 +1,8 @@
 #ifndef BASICOS_H
 #define BASICOS_H
 
+#include <QPoint>
+
 namespace Tabuleiro
 {
     typedef QPair<qint8, qint8>
@@ -14,6 +16,9 @@ namespace Tabuleiro
 
     typedef QPair<unsigned int, unsigned int>
     CoordenadaMapaBits;
+
+    typedef QPoint
+    XyView;
 
     const QSize
     P_SIZE(20,20);

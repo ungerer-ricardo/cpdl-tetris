@@ -1,4 +1,4 @@
-#include "tipopeca.h"
+#include "mapapecas.h"
 #include <QDebug>
 
 Tabuleiro::MapaPecas*
@@ -69,9 +69,9 @@ Tabuleiro::MapaPecas::criaPecaZ( )
     Tabuleiro::TipoPeca
     peca;
 
-    peca << Tabuleiro::Xy(0,-1);
-    peca << Tabuleiro::Xy(0,0);
     peca << Tabuleiro::Xy(-1,0);
+    peca << Tabuleiro::Xy(0,0);
+    peca << Tabuleiro::Xy(0,-1);
     peca << Tabuleiro::Xy(-1,1);
 
     return peca;

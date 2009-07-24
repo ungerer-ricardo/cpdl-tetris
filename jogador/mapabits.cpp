@@ -24,7 +24,7 @@ Tabuleiro::MapaBits::defineTamanho( unsigned short int _tamanhoX, unsigned short
 }
 
 bool
-Tabuleiro::MapaBits::possoColocarAqui( Tabuleiro::TipoPeca _coordenadasRelativas, Tabuleiro::CoordenadaMapaBits _posicaoPivo)
+Tabuleiro::MapaBits::possoColocarAqui( Tabuleiro::TipoPeca _coordenadasRelativas, Tabuleiro::CoordenadaMapaBits _posicaoPivo )
 {
     bool
     pode;
@@ -34,8 +34,14 @@ Tabuleiro::MapaBits::possoColocarAqui( Tabuleiro::TipoPeca _coordenadasRelativas
 
     foreach( pecinha, _coordenadasRelativas )
     {
-        pode = ( pode && (this->mapa[(_posicaoPivo.first+pecinha.first)][(_posicaoPivo.second+pecinha.second)] == NULL) );
+        pode = ( pode && this->temGenteAqui(_posicaoPivo.first+pecinha.first,_posicaoPivo.second+pecinha.second) );
     }
 
     return pode;
+}
+
+bool
+Tabuleiro::MapaBits::temGenteAqui( unsigned int _x, unsigned int _y )
+{
+    return ( this->mapa[_x][_y] == NULL );
 }

@@ -7,21 +7,29 @@
 #include <QCheckBox>
 #include <QLineEdit>
 
-#include "tipopeca.h"
+#include <QStyle>
+#include <QPalette>
+#include <QColor>
+
+#include "basicos.h"
 
 namespace Tabuleiro
 {
     class Pecinha : public QPushButton
     {
         public:
-            Pecinha( QString, Tabuleiro::Pecinha* = 0, Tabuleiro::Xy const* = 0, QWidget* _parent = 0 );
+            Pecinha( QColor, Tabuleiro::XyView, QWidget* _parent, Tabuleiro::Xy const* = 0);
 
-        private:
-            Tabuleiro::Pecinha*
-            pivo;
+        public slots:
+            void
+            moveEu( Tabuleiro::XyView );
 
-            Tabuleiro::TipoPeca*
+        protected:
+            Tabuleiro::Xy const*
             posicaoRelativa;
+
+            Tabuleiro::XyView
+            calculaNovaPosicao( Tabuleiro::XyView );
     };
 }
 
