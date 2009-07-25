@@ -1,56 +1,51 @@
 #ifndef JOGADOR_H
 #define JOGADOR_H
 
-#include <QMutex>
+#include <QSemaphore>
 #include <QTcpSocket>
-#include <QThread>
 
-class Roteador;
-
-class Jogador : public QThread
+namespace Rede_Server
 {
-    Q_OBJECT
-public:
 
-    Jogador( int _socket_descriptor, QObject* _parent = 0 );
+    class Roteador;
 
-    ~Jogador();
+    class Jogador : public QObject
+    {
+        Q_OBJECT
+    public:
 
-    void
-    run();
+        Jogador( int _socket_descriptor, Roteador* _parent = 0 );
 
-signals:
+        ~Jogador();
 
-    void
-    novoDado( QByteArray _dado );
+    signals:
 
-    void
-    erro();
+        void
+        novoDado( QString _dado );
 
-public slots:
+        void
+        erro();
 
-    void
-    leNovoDadoRede();
+    public slots:
 
-    void
-    erroConexao( QAbstractSocket::SocketError _erro );
+        void
+        erroConexao( QAbstractSocket::SocketError _erro );
 
-    void
-    enviaDado( QByteArray& _dado );
+        void
+        enviaDado( QString& _dado );
 
-private:
+        void
+        dadoChegando();
 
-    QTcpSocket*
-    conexao;
+    protected:
 
-    QMutex
-    nao_enviado_mutex;
+        QTcpSocket*
+        conexao;
 
-    QThread*
-    filha;
+        int
+        socket_descriptor;
 
-    int
-    socket_descriptor;
-};
+    };
+}
 
 #endif // JOGADOR_H

@@ -9,7 +9,7 @@ int main( int argc, char* argv[] )
 
     QApplication app( argc, argv );
 
-    Roteador
+    Rede_Server::Roteador
     novo_roteador;
 
     return app.exec();

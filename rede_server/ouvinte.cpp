@@ -4,6 +4,8 @@
 
 #include "./roteador.h"
 
+using namespace Rede_Server;
+
 Ouvinte::Ouvinte( Roteador* _parent )
         : QTcpServer( _parent )
 {
@@ -22,9 +24,9 @@ bool
 Ouvinte::startListen()
 {
     qint16
-    porta = 6969;
+    porta = 9999;
 
-    this->listen( QHostAddress::LocalHost, porta );
+    this->listen( QHostAddress::Any, porta );
 
     if ( this->isListening() )
     {
@@ -46,7 +48,8 @@ Ouvinte::incomingConnection( int _socket_descriptor )
 
     novo_jogador = new Jogador( _socket_descriptor, 0 );
 
-    novo_jogador->start();
+
+
 
     emit this->novoJogador( novo_jogador );
 }

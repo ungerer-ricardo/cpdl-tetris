@@ -2,56 +2,33 @@
 
 #include "./roteador.h"
 
-Jogador::Jogador( int _socket_descriptor, QObject* _parent )
-        : QThread(_parent)
+using namespace Rede_Server;
+
+Jogador::Jogador( int _socket_descriptor, Roteador* _parent )
+        : QObject(_parent)
 {
-    this->socket_descriptor = _socket_descriptor;
+    qDebug() << "Novo jogador iniciando";
+
+    this->conexao = new QTcpSocket(this);
+
+    if (! this->conexao->setSocketDescriptor( _socket_descriptor))
+    {
+        //envia erro
+    }
+
+    QObject::connect(this->conexao,SIGNAL(readyRead()),
+                     this,SLOT(dadoChegando()));
+
+    QObject::connect(this->conexao,SIGNAL(error(QAbstractSocket::SocketError)),
+                     this,SLOT(erroConexao(QAbstractSocket::SocketError)));
 }
 
 Jogador::~Jogador()
 {
-    this->conexao->close();
-
-    if (this->isRunning())
+    if (this->conexao->isOpen())
     {
-        this->terminate();
+        this->conexao->close();
     }
-
-    delete this->conexao;
-}
-
-void
-Jogador::run()
-{
-    this->conexao = new QTcpSocket();
-    this->filha = this->thread();
-
-    QObject::connect(this->conexao,SIGNAL(readyRead()),
-                 this,SLOT(leNovoDadoRede()),
-                 Qt::DirectConnection);
-
-    QObject::connect(this->conexao,SIGNAL(error(QAbstractSocket::SocketError)),
-                     this,SLOT(erroConexao(QAbstractSocket::SocketError)),
-                     Qt::DirectConnection);
-
-    if ( ! this->conexao->setSocketDescriptor( this->socket_descriptor ) )
-    {
-        //envia erro de conexão
-    }
-
-    QByteArray boga("0");       // hein?!?!?
-    this->enviaDado(boga);      // é... gambeta bruta memo!!
-
-    this->exec();
-}
-
-void
-Jogador::leNovoDadoRede()
-{
-    QByteArray
-    novoDado = this->conexao->read( 10000 );
-
-    emit this->novoDado( novoDado );
 }
 
 void
@@ -59,18 +36,55 @@ Jogador::erroConexao( QAbstractSocket::SocketError _erro )
 {
     Q_UNUSED( _erro );
 
-    qWarning() << "Jogador " << this->currentThreadId() << ": ih! A conexão caiu!";
+    qWarning() << "Jogador : ih! A conexão caiu!";
     this->conexao->close();
 
     emit this->erro();
-    this->exit(1);
 }
 
 void
-Jogador::enviaDado( QByteArray& _dado )
+Jogador::enviaDado( QString& _dado )
 {
-    qDebug() << "Jogador " << this->currentThreadId() << " enviando dados";
+    if ( this->conexao->isWritable() )
+    {
+        QByteArray block;
+        QDataStream out(&block, QIODevice::ReadWrite);
+        out.setVersion(QDataStream::Qt_4_0);
+        out << (quint16)0;
+        out << _dado;
+        out.device()->seek(0);
+        out << (quint16)(block.size() - sizeof(quint16));
 
-    this->conexao->write( _dado );
-    qDebug() << "Jogador " << this->currentThreadId() <<" dados enviados";
+        qDebug() << "Jogador: escrevendo dados na placa";
+        this->conexao->write( block );
+    }
+    else
+    {
+        qDebug() << "Jogador: nao pude escrever";
+        this->erroConexao( QAbstractSocket::NetworkError );
+    }
+}
+
+void
+Jogador::dadoChegando()
+{
+    quint16 bloco = 0;
+    QDataStream in(this->conexao);
+    in.setVersion(QDataStream::Qt_4_0);
+
+    if (bloco == 0) {
+        if (this->conexao->bytesAvailable() < (int)sizeof(quint16))
+            return; //erro ao ler pacote
+
+        in >> bloco;
+    }
+
+    if ( this->conexao->bytesAvailable() < bloco )
+        return; //erro ao ler pacote
+
+    QString mensagem;
+    in >> mensagem;
+
+    qDebug() << "Jogador: Chegou um dado aqui hein: "<< mensagem;
+    emit this->novoDado(mensagem);
 }

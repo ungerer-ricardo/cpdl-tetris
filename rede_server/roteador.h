@@ -8,40 +8,46 @@
 #include "./ouvinte.h"
 #include "../lib/tradutor.h"
 
-class Roteador : public QObject
+namespace Rede_Server
 {
-    Q_OBJECT
-public:
+    class Roteador : public QObject
+    {
+        Q_OBJECT
+    public:
 
-    Roteador( QObject* _parent = 0 );
+        Roteador( QObject* _parent = 0 );
 
-    ~Roteador();
+        ~Roteador();
 
-signals:
+    signals:
 
-    void
-    broadcast( QByteArray& _dado );
+        void
+        broadcast( QByteArray& _dado );
 
-public slots:
+    public slots:
 
-    void
-    novoJogador( Jogador* _novo_jogador );
+        void
+        novoJogador( Jogador* _novo_jogador );
 
-    void
-    recebeDado( QByteArray _dado );
+        void
+        recebeDado( QString _dado );
 
-protected:
+    protected:
 
-    void
-    processaComando( ComandoParseado& _comando );
+        void
+        processaComando( ComandoParseado& _comando );
 
-private:
+    private:
 
-    QList<Jogador*>
-    listaJogadores;
+        QList<Jogador*>
+        listaJogadores;
 
-    Ouvinte*
-    ouvinte;
-};
+        Ouvinte*
+        ouvinte;
 
+        Tradutor
+        tradutor;
+    };
+
+}
 #endif // ROTEADOR_H
