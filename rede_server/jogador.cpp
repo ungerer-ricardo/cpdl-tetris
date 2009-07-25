@@ -43,12 +43,20 @@ Jogador::erroConexao( QAbstractSocket::SocketError _erro )
 }
 
 void
-Jogador::enviaDado( QByteArray& _dado )
+Jogador::enviaDado( QString& _dado )
 {
     if ( this->conexao->isWritable() )
     {
+        QByteArray block;
+        QDataStream out(&block, QIODevice::ReadWrite);
+        out.setVersion(QDataStream::Qt_4_0);
+        out << (quint16)0;
+        out << _dado;
+        out.device()->seek(0);
+        out << (quint16)(block.size() - sizeof(quint16));
+
         qDebug() << "Jogador: escrevendo dados na placa";
-        this->conexao->write( _dado.toUpper() );
+        this->conexao->write( block );
     }
     else
     {
@@ -60,10 +68,23 @@ Jogador::enviaDado( QByteArray& _dado )
 void
 Jogador::dadoChegando()
 {
-    qDebug() << "Jogador: Chegou um dado aqui hein";
+    quint16 bloco = 0;
+    QDataStream in(this->conexao);
+    in.setVersion(QDataStream::Qt_4_0);
 
-    QByteArray
-    dado_chegante = this->conexao->readLine(64);
-    qDebug() << (QString) dado_chegante;
+    if (bloco == 0) {
+        if (this->conexao->bytesAvailable() < (int)sizeof(quint16))
+            return; //erro ao ler pacote
 
+        in >> bloco;
+    }
+
+    if ( this->conexao->bytesAvailable() < bloco )
+        return; //erro ao ler pacote
+
+    QString mensagem;
+    in >> mensagem;
+
+    qDebug() << "Jogador: Chegou um dado aqui hein: "<< mensagem;
+    emit this->novoDado(mensagem);
 }

@@ -21,7 +21,7 @@ namespace Rede_Server
     signals:
 
         void
-        novoDado( QByteArray _dado );
+        novoDado( QString _dado );
 
         void
         erro();
@@ -32,7 +32,7 @@ namespace Rede_Server
         erroConexao( QAbstractSocket::SocketError _erro );
 
         void
-        enviaDado( QByteArray& _dado );
+        enviaDado( QString& _dado );
 
         void
         dadoChegando();

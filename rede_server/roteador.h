@@ -30,7 +30,7 @@ namespace Rede_Server
         novoJogador( Jogador* _novo_jogador );
 
         void
-        recebeDado( QByteArray _dado );
+        recebeDado( QString _dado );
 
     protected:
 

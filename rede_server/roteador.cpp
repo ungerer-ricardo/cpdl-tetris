@@ -21,28 +21,18 @@ Rede_Server::Roteador::novoJogador( Jogador* _novo_jogador )
 {
     qDebug() << "Roteador: Novo jogador conectado!!";
 
+    QObject::connect(_novo_jogador,SIGNAL(novoDado(QString)),
+                     this,SLOT(recebeDado(QString)));
 
-    qDebug() << "enviano dados";
+    //avisar a este quantos outros jogadores existem.
 
-    QObject::connect(_novo_jogador,SIGNAL(novoDado(QByteArray)),
-                     this,SLOT(recebeDado(QByteArray)));
-
-    QByteArray block;
-    QDataStream out(&block, QIODevice::ReadWrite);
-    out.setVersion(QDataStream::Qt_4_0);
-    out << (quint16)0;
-    out << "boga boga";
-    out.device()->seek(0);
-    out << (quint16)(block.size() - sizeof(quint16));
-
-    _novo_jogador->enviaDado(block);
-
+    //avisar aos outros conectados que entrou mais um.
 
     this->listaJogadores.push_back( _novo_jogador );
 }
 
 void
-Rede_Server::Roteador::recebeDado( QByteArray _dado )
+Rede_Server::Roteador::recebeDado( QString _dado )
 {
 
 }
