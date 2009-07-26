@@ -22,11 +22,6 @@ namespace Rede_Server
         void
         stopListen();
 
-    signals:
-
-        void
-        broadcast( QString _dado );
-
     public slots:
 
         void
@@ -35,10 +30,10 @@ namespace Rede_Server
         void
         recebeDado( QString _dado );
 
-    protected:
+    protected slots:
 
         void
-        processaComando( ComandoParseado& _comando );
+        jogadorCaiu( Jogador* _com_erro );
 
     private:
 
@@ -50,6 +45,11 @@ namespace Rede_Server
 
         Tradutor
         tradutor;
+
+    signals:
+
+        void
+        broadcast( QString _dado );
     };
 
 }

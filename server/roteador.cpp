@@ -63,7 +63,17 @@ Rede_Server::Roteador::recebeDado( QString _dado )
 }
 
 void
-Rede_Server::Roteador::processaComando( ::ComandoParseado& _comando )
+Rede_Server::Roteador::jogadorCaiu( Jogador* _com_erro )
 {
+    QObject::disconnect(this,SIGNAL(broadcast(QString)),
+                        _com_erro,SLOT(enviaDado(QString)));
 
+    int
+    id_jogador = this->listaJogadores.indexOf(_com_erro);
+
+    this->listaJogadores.removeAt(id_jogador);
+
+    QString
+    comando_caiu( "down:" + QString::number(id_jogador) );
+    emit this->broadcast(comando_caiu);
 }
