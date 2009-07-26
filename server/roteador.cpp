@@ -1,12 +1,6 @@
 #include "roteador.h"
 
 #include <QDebug>
-/*
-  Comandos de roteamento:
-    -"init:x" em que x é o número de jogadores já conectados.
-    -"novo"
-    -"down:x" em que x indica o id do jogador com problemas.
-*/
 
 Rede_Server::Roteador::Roteador( QObject* _parent )
         : QObject(_parent)
@@ -36,6 +30,9 @@ Rede_Server::Roteador::novoJogador( Jogador* _novo_jogador )
     QObject::connect(_novo_jogador,SIGNAL(novoDado(QString)),
                      this,SLOT(recebeDado(QString)));
 
+    QObject::connect(_novo_jogador,SIGNAL(erro()),
+                     this,SLOT(jogadorCaiu(Jogador*)));
+
     /* SERIA LEGAL MODULARIZAR TODAS AS FORMAÇÕES DE COMANDOS */
     QString
     comando_init("init:");
@@ -59,7 +56,17 @@ Rede_Server::Roteador::novoJogador( Jogador* _novo_jogador )
 void
 Rede_Server::Roteador::recebeDado( QString _dado )
 {
+    QString
+    comando_str = _dado.left(4).toLower();
 
+    if ( comando_str == "butt" && _dado.right(7) == "encaixe")
+    {
+        //busca nova peca
+
+        _dado.append(";2");
+    }
+
+    emit this->broadcast(_dado);
 }
 
 void

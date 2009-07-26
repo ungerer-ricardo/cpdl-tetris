@@ -39,7 +39,7 @@ Jogador::erroConexao( QAbstractSocket::SocketError _erro )
     qWarning() << "Jogador : ih! A conexão caiu!";
     this->conexao->close();
 
-    emit this->erro();
+    emit this->erro(this);
 }
 
 void

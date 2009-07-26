@@ -6,7 +6,6 @@
 
 #include "./jogador.h"
 #include "./ouvinte.h"
-#include "../lib/tradutor.h"
 
 namespace Rede_Server
 {
@@ -42,9 +41,6 @@ namespace Rede_Server
 
         Ouvinte*
         ouvinte;
-
-        Tradutor
-        tradutor;
 
     signals:
 

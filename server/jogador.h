@@ -24,7 +24,7 @@ namespace Rede_Server
         novoDado( QString _dado );
 
         void
-        erro();
+        erro( Jogador* );
 
     public slots:
 
