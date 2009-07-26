@@ -19,10 +19,13 @@ namespace Rede_Server
 
         ~Roteador();
 
+        void
+        stopListen();
+
     signals:
 
         void
-        broadcast( QByteArray& _dado );
+        broadcast( QString _dado );
 
     public slots:
 

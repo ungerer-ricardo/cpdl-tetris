@@ -4,6 +4,10 @@ conectados.
 	Comando: "init:x" em que x é o número de jogadores já conectados.
        e o cliente assim saberá que seu id é __x+1__
 
+     Logo apos, o servidor deverá tambem enviar uma mensagem a todos os outros
+clientes que há um novo cliente.
+        Comando: "novo"
+
      Ao mesmo tempo, se algum jogador cair, o servidor deverá informar a todos
 os clientes dessa queda.
 	Comando: "down:x" em que x indica o id do jogador com problemas.
@@ -30,7 +34,7 @@ para as peças seguindo o padrão:
   A seguir o servidor replicará a mensagem a todos os clientes pelo padrao:
 	Comando: "butt:x;y" em que x indica o comando e y o id do jogador.
 
-  IMPORTANTE:  A única exceção é o comando encaixe, cuja resposta do server será:
+ IMPORTANTE:  A única exceção é o comando encaixe, cuja resposta do server será:
 	Comando: "butt:x;y;z" em que x indica o comando,
 				     y o id do jogador. 
 				     z a proxima peça.

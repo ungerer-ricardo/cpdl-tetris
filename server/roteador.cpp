@@ -1,6 +1,12 @@
 #include "roteador.h"
 
 #include <QDebug>
+/*
+  Comandos de roteamento:
+    -"init:x" em que x é o número de jogadores já conectados.
+    -"novo"
+    -"down:x" em que x indica o id do jogador com problemas.
+*/
 
 Rede_Server::Roteador::Roteador( QObject* _parent )
         : QObject(_parent)
@@ -17,6 +23,12 @@ Rede_Server::Roteador::~Roteador()
 }
 
 void
+Rede_Server::Roteador::stopListen()
+{
+    this->ouvinte->close();
+}
+
+void
 Rede_Server::Roteador::novoJogador( Jogador* _novo_jogador )
 {
     qDebug() << "Roteador: Novo jogador conectado!!";
@@ -24,11 +36,24 @@ Rede_Server::Roteador::novoJogador( Jogador* _novo_jogador )
     QObject::connect(_novo_jogador,SIGNAL(novoDado(QString)),
                      this,SLOT(recebeDado(QString)));
 
-    //avisar a este quantos outros jogadores existem.
+    /* SERIA LEGAL MODULARIZAR TODAS AS FORMAÇÕES DE COMANDOS */
+    QString
+    comando_init("init:");
 
-    //avisar aos outros conectados que entrou mais um.
+    comando_init.append( QString::number(this->listaJogadores.size()) );
+    _novo_jogador->enviaDado(comando_init);
+
+    if ( this->listaJogadores.size() > 0 )
+    {
+        emit this->broadcast(QString("novo"));
+    }
 
     this->listaJogadores.push_back( _novo_jogador );
+
+    //so deve ser adicionado na lista de broadcast depois que todos ja souberem
+    //de sua existencia e que ele saiba da existencia dos outros.
+    QObject::connect(this,SIGNAL(broadcast(QString)),
+                     _novo_jogador,SLOT(enviaDado(QString)));
 }
 
 void
