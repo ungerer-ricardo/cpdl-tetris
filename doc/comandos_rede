@@ -1,0 +1,36 @@
+Jogador Conectado:
+1º - Deve receber um aviso do server informando quantos jogadores ja estão 
+conectados.
+	Comando: "init:x" em que x é o número de jogadores já conectados.
+       e o cliente assim saberá que seu id é __x+1__
+
+     Ao mesmo tempo, se algum jogador cair, o servidor deverá informar a todos
+os clientes dessa queda.
+	Comando: "down:x" em que x indica o id do jogador com problemas.
+
+2º - Enquanto o jogo não começa, ou seja, o servidor não recebeu a quantidade 
+de jogadores programados no seu parametro, os jogadores poderao conversar pelo 
+chat.
+     O servidor ao receber um envio de mensagem de chat deverá redistribuir
+a mensagem em todos os clientes conectados.
+	Comando: "chat:x;msg " em que x é o jogador que envia a mensagem
+
+3º - Ao atingir o número programado de participantes, o servidor iniciará o 
+jogo e informará a todos os clientes que devem tomar esta ação.
+	Comando: "star:x;y" em que x e y indicam os ids das peças que deverão
+       cair imediatamente e a próxima.
+
+4º - Durante o jogo os clientes continuarão a enviar mensagens de chat para o 
+servidor seguindo o mesmo padrão.
+
+5º - Durante o jogo os clientes enviarão ao servidor os comandos de teclado
+para as peças seguindo o padrão:
+	Comando: "butt:x" em que x indica o comando.
+
+  A seguir o servidor replicará a mensagem a todos os clientes pelo padrao:
+	Comando: "butt:x;y" em que x indica o comando e y o id do jogador.
+
+  IMPORTANTE:  A única exceção é o comando encaixe, cuja resposta do server será:
+	Comando: "butt:x;y;z" em que x indica o comando,
+				     y o id do jogador. 
+				     z a proxima peça.
