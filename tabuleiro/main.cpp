@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 
     w.startjogo(6,5);
 
-    w.novapeca(4);
+    //w.novapeca(4);
 
     return a.exec();
 }

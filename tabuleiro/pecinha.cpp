@@ -12,7 +12,6 @@ Tab::Pecinha::Pecinha( QColor _cor,
     pal;
 
     this->posicaoRelativa = _posicaoRelativa;
-//    this->visualizacao->setText( " " );
     this->visualizacao->resize( Tab::P_SIZE );
     this->visualizacao->setEnabled(false);
 

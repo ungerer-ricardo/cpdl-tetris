@@ -7,6 +7,7 @@ Tab::Pivo::Pivo( qint8 _idPeca, QColor _cor, Tab::XyView _posicaoTabuleiro, QWid
     this->peca = Tab::MapaPecas::MeDaOMapa( )->ComoEhAPeca( _idPeca );
     this->tipoPecaInt = _idPeca;
     this->visualizacao->move(_posicaoTabuleiro);
+    this->cor = _cor;
 
     if( this->tipoPecaInt != 0 )
     {
@@ -67,7 +68,7 @@ Tab::Pivo::rotaciona( )
             xVelho = coordenadaPecinha->first;
             coordenadaPecinha->first = coordenadaPecinha->second;
             coordenadaPecinha->second = -xVelho;
-//            novasPosicoes << Xy( coordenadaPecinha.second, -coordenadaPecinha.first );
+            //novasPosicoes << Xy( coordenadaPecinha.second, -coordenadaPecinha.first );
         }
 //            qDebug() << this->peca;
 //        if( this->MapaBits->possoColocarAqui(novasPosicoes, this->ondeEuTo) )

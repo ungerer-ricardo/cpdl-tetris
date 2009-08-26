@@ -52,7 +52,7 @@ namespace Tab
             QVector<Tab::Pecinha*>
             agregadas;
 
-            QString
+            QColor
             cor;
 
             Tab::CoordenadaMapaBits

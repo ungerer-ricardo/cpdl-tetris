@@ -10,7 +10,9 @@ Tabuleiro::Tabuleiro(QWidget *parent)
     ui->setupUi(this);
 
     qDebug() << "Conectando Signal do timer...";
+
     this->timer = new QTimer(this);
+    this->timer2 = new QTimer(this);
 }
 
 Tabuleiro::~Tabuleiro()
@@ -50,14 +52,16 @@ Tabuleiro::startjogo( qint8 descendo, qint8 proxima )
     Tab::XyView
     pos1(30,30);
 
-//    qDebug() << "    Instanciando Peca...";
-//    this->currentPiece = new Tab::Pivo( descendo, QColor(0,0,0), pos, this->ui->piecesContainer );
+    qDebug() << "    Instanciando Peca...";
+    this->currentPiece = new Tab::Pivo( descendo, QColor("red"), pos, this->ui->piecesContainer );
 
     qDebug() << "    Instanciando Preview...";
     this->previewPiece = new Tab::Pivo( proxima, QColor(0,0,0), pos1, this->ui->piecePreview );
 
-//    connect(this->timer, SIGNAL(timeout()), this->currentPiece, SLOT(desce()));
-//    this->timer->start(1000);
+    connect(this->timer, SIGNAL(timeout()), this->currentPiece, SLOT(desce()));
+    this->timer->start(1000);
+    connect(this->timer2, SIGNAL(timeout()), this->currentPiece, SLOT(rotaciona()));
+    this->timer2->start(2000);
 }
 
 void
