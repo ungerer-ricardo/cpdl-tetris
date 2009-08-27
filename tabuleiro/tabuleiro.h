@@ -70,9 +70,6 @@ class Tabuleiro : public QWidget
         Tab::Pivo*
         previewPiece;
 
-        QWidget*
-        caralho;
-
     private:
         Ui::Tabuleiro *ui;
 };

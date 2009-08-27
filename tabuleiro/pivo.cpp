@@ -18,7 +18,15 @@ Tab::Pivo::Pivo( qint8 _idPeca, QColor _cor, Tab::XyView _posicaoTabuleiro, QWid
 
 Tab::Pivo::~Pivo( )
 {
-    this->visualizacao->hide();
+    delete this->agregadas[0];
+    delete this->agregadas[1];
+    delete this->agregadas[2];
+}
+
+qint8
+Tab::Pivo::getPecaInt( )
+{
+    return this->tipoPecaInt;
 }
 
 void
@@ -74,10 +82,6 @@ Tab::Pivo::rotaciona( )
             }
 
             emit this->mudou(this->visualizacao->pos());
-        }
-        else
-        {
-            emit this->colidiu( );
         }
     }
 }
@@ -139,6 +143,7 @@ Tab::Pivo::desce( )
     }
     else
     {
+        qDebug() << "    Colisao do Caralho...";
         emit this->colidiu( );
     }
 };

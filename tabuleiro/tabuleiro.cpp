@@ -59,7 +59,8 @@ Tabuleiro::colidiu( )
 {
     qDebug() << "Signal de colisao recebido...";
     this->timer->disconnect( this->currentPiece, SLOT(desce()) );
-    this->timer2->disconnect( this->currentPiece, SLOT(rotaciona()) );
+
+    this->novapeca( (rand()%7)+1 );
 }
 
 void
@@ -93,19 +94,6 @@ Tabuleiro::startjogo( qint8 descendo, qint8 proxima )
     qDebug() << "    Instanciando Preview...";
     this->previewPiece = new Tab::Pivo( proxima, QColor(0,0,0), pos1, this->ui->piecePreview );
 
-    this->caralho = new QRadioButton( this->ui->piecesContainer );
-    QPalette
-    pal;
-
-    this->caralho->resize( Tab::P_SIZE );
-    this->caralho->setEnabled(false);
-
-    pal.setColor(QPalette::Button, "black");
-    this->caralho->setPalette(pal);
-
-    this->caralho->move( 60, 200 );
-    this->caralho->show();
-
     connect(this->timer, SIGNAL(timeout()), this->currentPiece, SLOT(desce()));
     connect(this->currentPiece, SIGNAL(colidiu()), this, SLOT(colidiu()));
     this->timer->start(1000);
@@ -120,16 +108,18 @@ Tabuleiro::novapeca( qint8 nova )
     Tab::XyView
     pos(30,30);
 
-    qDebug() << "    Movendo controle da peca corrente para o MapaDeBits...";
-//    this->timer->disconnect(this->currentPiece);
+    Tab::XyView
+    pos1(60,60);
 
     qDebug() << "    Movendo a previsualizacao da peca para a peca corrente...";
-
+    this->currentPiece = new Tab::Pivo( this->previewPiece->getPecaInt(), QColor("red"), pos1, this->ui->piecesContainer );
 
     qDebug() << "    Instanciando nova previsualizacao...";
-    //this->previewPiece = new Tab::Pivo( nova, QColor(0,0,0), pos, this->ui->piecePreview );
+    delete this->previewPiece;
+    this->previewPiece = new Tab::Pivo( nova, QColor("red"), pos, this->ui->piecePreview );
 
     qDebug() << "Conectando Signal do timer...";
-//    connect(this->timer, SIGNAL(timeout()), this->currentPiece, SLOT(desce()));
-//    this->timer->start(1000);
+    connect(this->timer, SIGNAL(timeout()), this->currentPiece, SLOT(desce()));
+    connect(this->currentPiece, SIGNAL(colidiu()), this, SLOT(colidiu()));
+    this->timer->start(1000);
 }

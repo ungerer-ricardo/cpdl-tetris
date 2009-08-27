@@ -22,6 +22,9 @@ namespace Tab
 
             ~Pivo( );
 
+            qint8
+            getPecaInt( );
+
         public slots:
             void
             rotaciona( );
