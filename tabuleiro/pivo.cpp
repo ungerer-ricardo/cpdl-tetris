@@ -143,9 +143,41 @@ Tab::Pivo::desce( )
     }
     else
     {
-        qDebug() << "    Colisao do Caralho...";
         emit this->colidiu( );
     }
+};
+
+unsigned int
+Tab::Pivo::desceTudo( )
+{
+    Tab::XyView
+    novaPosicaoPivo = this->visualizacao->pos( );
+
+    Tab::XyView
+    novaPosicaoPivoTeste = this->visualizacao->pos( );
+
+    unsigned int
+    linhasQueDesceram = 0;
+
+    qDebug() << "Signal do timer recebido...";
+    qDebug() << "    Descendo peca...";
+
+    novaPosicaoPivo.ry() += Tab::P_SIZE.height();
+    novaPosicaoPivoTeste.ry() += 2*Tab::P_SIZE.height();
+
+    while( this->possoColocarAqui(this->peca, novaPosicaoPivoTeste) )
+    {
+        novaPosicaoPivo.ry() += Tab::P_SIZE.height();
+        novaPosicaoPivoTeste.ry() += Tab::P_SIZE.height();
+
+        ++linhasQueDesceram;
+    }
+
+    this->visualizacao->move( novaPosicaoPivo );
+
+    emit this->mudou( this->visualizacao->pos() );
+
+    return linhasQueDesceram;
 };
 
 bool

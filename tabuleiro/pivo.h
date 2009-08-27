@@ -32,6 +32,9 @@ namespace Tab
             void
             desce( );
 
+            unsigned int
+            desceTudo( );
+
             void
             moveDireita( );
 

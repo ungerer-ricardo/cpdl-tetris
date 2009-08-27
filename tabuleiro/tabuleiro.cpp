@@ -13,10 +13,17 @@ Tabuleiro::Tabuleiro(QWidget *parent)
     qDebug() << "Conectando Signal do timer...";
 
     this->timer = new QTimer(this);
+    this->pontuacao = 0;
+    this->level = 1;
 
     connect( this, SIGNAL(keyPressed(int)), this, SLOT(onKeyPress(int)) );
     connect( this, SIGNAL(linhaCheia(Tab::XyView)), this, SLOT(apagaLinhaCheia(Tab::XyView)) );
     connect( this, SIGNAL(procuraLinhas()), this, SLOT(procuraLinhasCheias()) );
+    connect( this, SIGNAL(pontuacaoMudou()), this, SLOT(setPontuacao()) );
+    connect( this, SIGNAL(levelMudou()), this, SLOT(setLevel()) );
+
+    emit this->levelMudou( );
+    emit this->pontuacaoMudou( );
 }
 
 Tabuleiro::~Tabuleiro()
@@ -40,6 +47,10 @@ Tabuleiro::onKeyPress( int _tecla )
             break;
         case Qt::Key_Up:
             this->currentPiece->rotaciona();
+            break;
+        case Qt::Key_Space:
+            this->pontuacao += this->currentPiece->desceTudo();
+            emit this->pontuacaoMudou();
             break;
     }
 }
@@ -109,6 +120,9 @@ Tabuleiro::apagaLinhaCheia( Tab::XyView _posicaoAApagar )
         _posicaoAApagar.rx() += Tab::P_SIZE.width();
     }
 
+    this->pontuacao += 10;
+    emit pontuacaoMudou();
+
     this->desceLinhas( _posicaoAApagar );
 }
 
@@ -142,6 +156,18 @@ Tabuleiro::desceLinhas( Tab::XyView _posicao )
 
         _posicao.ry() -= Tab::P_SIZE.height();
     }
+}
+
+void
+Tabuleiro::setLevel( )
+{
+    this->ui->level->display( (int) this->level );
+}
+
+void
+Tabuleiro::setPontuacao( )
+{
+    this->ui->pontuacao->display( (int) this->pontuacao );
 }
 
 void
@@ -196,9 +222,10 @@ Tabuleiro::startjogo( qint8 descendo, qint8 proxima )
     qDebug() << "    Instanciando Preview...";
     this->previewPiece = new Tab::Pivo( proxima, QColor(0,0,0), pos1, this->ui->piecePreview );
 
-    connect(this->timer, SIGNAL(timeout()), this->currentPiece, SLOT(desce()));
-    connect(this->currentPiece, SIGNAL(colidiu()), this, SLOT(colidiu()));
-    this->timer->start(1000);
+    connect( this->timer, SIGNAL(timeout()), this->currentPiece, SLOT(desce()) );
+    connect( this->currentPiece, SIGNAL(colidiu()), this, SLOT(colidiu()) );
+
+    this->timer->start( this->getTimeOut() );
 
 }
 
@@ -223,5 +250,12 @@ Tabuleiro::novapeca( qint8 nova )
     qDebug() << "Conectando Signal do timer...";
     connect(this->timer, SIGNAL(timeout()), this->currentPiece, SLOT(desce()));
     connect(this->currentPiece, SIGNAL(colidiu()), this, SLOT(colidiu()));
-    this->timer->start(1000);
+
+    this->timer->start( this->getTimeOut() );
+}
+
+unsigned int
+Tabuleiro::getTimeOut( )
+{
+    return ( 2000 / (1+this->level) );
 }

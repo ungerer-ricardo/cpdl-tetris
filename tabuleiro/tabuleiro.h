@@ -46,6 +46,12 @@ class Tabuleiro : public QWidget
         void
         apagaLinhaCheia( Tab::XyView );
 
+        void
+        setLevel( );
+
+        void
+        setPontuacao( );
+
     signals:
         void
         encaixe( );
@@ -65,6 +71,12 @@ class Tabuleiro : public QWidget
         void
         procuraLinhas( );
 
+        void
+        levelMudou( );
+
+        void
+        pontuacaoMudou( );
+
     protected:
         void
         keyPressEvent( QKeyEvent* );
@@ -73,8 +85,11 @@ class Tabuleiro : public QWidget
         QTimer*
         timer;
 
-        QTimer*
-        timer2;
+        unsigned int
+        pontuacao;
+
+        unsigned int
+        level;
 
         Tab::Pivo*
         currentPiece;
@@ -84,6 +99,9 @@ class Tabuleiro : public QWidget
 
         void
         desceLinhas( Tab::XyView );
+
+        unsigned int
+        getTimeOut( );
 
     private:
         Ui::Tabuleiro *ui;
