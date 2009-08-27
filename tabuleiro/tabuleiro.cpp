@@ -13,6 +13,7 @@ Tabuleiro::Tabuleiro(QWidget *parent)
     qDebug() << "Conectando Signal do timer...";
 
     this->timer = new QTimer(this);
+    this->numeroPecasUtilizadas = 0;
     this->pontuacao = 0;
     this->level = 1;
 
@@ -183,6 +184,14 @@ Tabuleiro::colidiu( )
     qDebug() << "Signal de colisao recebido...";
     this->timer->disconnect( this->currentPiece, SLOT(desce()) );
 
+    ++ numeroPecasUtilizadas;
+
+    if ( this->numeroPecasUtilizadas % 25 == 0 )
+    {
+        ++this->level;
+        emit this->levelMudou( );
+    }
+
     emit this->procuraLinhas( );
 
     qsrand( QTime::currentTime().msec() );
@@ -242,6 +251,11 @@ Tabuleiro::novapeca( qint8 nova )
 
     qDebug() << "    Movendo a previsualizacao da peca para a peca corrente...";
     this->currentPiece = new Tab::Pivo( this->previewPiece->getPecaInt(), QColor(0,0,0), pos1, this->ui->piecesContainer );
+
+//    if()
+//    {
+//        emit this->gameover( this->pontuacao );
+//    }
 
     qDebug() << "    Instanciando nova previsualizacao...";
     delete this->previewPiece;

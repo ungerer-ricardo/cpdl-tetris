@@ -91,6 +91,9 @@ class Tabuleiro : public QWidget
         unsigned int
         level;
 
+        unsigned int
+        numeroPecasUtilizadas;
+
         Tab::Pivo*
         currentPiece;
 
