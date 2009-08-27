@@ -22,18 +22,18 @@ namespace Tab
 
             ~Pivo( );
 
-            void
-            moveDireita( );
-
-            void
-            moveEsquerda( );
-
         public slots:
             void
             rotaciona( );
 
             void
             desce( );
+
+            void
+            moveDireita( );
+
+            void
+            moveEsquerda( );
 
         signals:
             void

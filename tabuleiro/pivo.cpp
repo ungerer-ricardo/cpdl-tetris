@@ -85,17 +85,39 @@ Tab::Pivo::rotaciona( )
 void
 Tab::Pivo::moveDireita( )
 {
+    Tab::XyView
+    novaPosicaoPivo = this->visualizacao->pos( );
+
+    qDebug() << "Signal de movimentacao recebido...";
     qDebug() << "    Movendo peca para a direita...";
-    this->visualizacao->move(this->visualizacao->x()+Tab::P_SIZE.height(), this->visualizacao->y()+Tab::P_SIZE.height());
-    qDebug() << this->peca;
+
+    novaPosicaoPivo.rx() += Tab::P_SIZE.width();
+
+    if( this->possoColocarAqui(this->peca, novaPosicaoPivo) )
+    {
+        this->visualizacao->move( novaPosicaoPivo );
+
+        emit this->mudou( this->visualizacao->pos() );
+    }
 };
 
 void
 Tab::Pivo::moveEsquerda( )
 {
+    Tab::XyView
+    novaPosicaoPivo = this->visualizacao->pos( );
+
+    qDebug() << "Signal de movimentacao recebido...";
     qDebug() << "    Movendo peca para a esquerda...";
-    this->visualizacao->move(this->visualizacao->x()-Tab::P_SIZE.width(), this->visualizacao->y());
-    qDebug() << this->peca;
+
+    novaPosicaoPivo.rx() -= Tab::P_SIZE.width();
+
+    if( this->possoColocarAqui(this->peca, novaPosicaoPivo) )
+    {
+        this->visualizacao->move( novaPosicaoPivo );
+
+        emit this->mudou( this->visualizacao->pos() );
+    }
 };
 
 void
@@ -111,9 +133,9 @@ Tab::Pivo::desce( )
 
     if( this->possoColocarAqui(this->peca, novaPosicaoPivo) )
     {
-        this->visualizacao->move(this->visualizacao->x(), this->visualizacao->y()+Tab::P_SIZE.height());
+        this->visualizacao->move( novaPosicaoPivo );
 
-        emit this->mudou(this->visualizacao->pos());
+        emit this->mudou( this->visualizacao->pos() );
     }
     else
     {
@@ -141,15 +163,15 @@ Tab::Pivo::possoColocarAqui( Tab::TipoPeca _novasPosicoes, Tab::XyView _posicaoR
         objeto = this->parentWidget()->childAt( posicaoAVerificar );
 
         if( (
+                (posicaoAVerificar.x() < 0) ||
+                (posicaoAVerificar.x() > 180)
+            ) ||
+            (
                 (objeto != 0) &&
                 (objeto != this->agregadas[0]->getVisualizacao()) &&
                 (objeto != this->agregadas[1]->getVisualizacao()) &&
                 (objeto != this->agregadas[2]->getVisualizacao()) &&
                 (objeto != this->visualizacao)
-            ) ||
-            (
-                (posicaoAVerificar.x() < 0) ||
-                (posicaoAVerificar.x() > 180)
             ) ||
             (
                 (posicaoAVerificar.y() > 480)

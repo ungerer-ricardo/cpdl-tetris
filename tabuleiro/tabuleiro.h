@@ -2,6 +2,7 @@
 #define TABULEIRO_H
 
 #include <QtGui/QWidget>
+#include <QKeyEvent>
 
 #include "basicos.h"
 #include "pivo.h"
@@ -36,6 +37,9 @@ class Tabuleiro : public QWidget
         void
         colidiu( );
 
+        void
+        onKeyPress( int );
+
     signals:
         void
         encaixe( );
@@ -43,6 +47,15 @@ class Tabuleiro : public QWidget
         void
         gameover( int pontuacao );
 
+    #if !defined(Q_MOC_RUN)
+    private: // can only be emitted by TetrixBoard
+    #endif
+        void
+        keyPressed( int );
+
+    protected:
+        void
+        keyPressEvent( QKeyEvent* );
 
     protected:
         QTimer*

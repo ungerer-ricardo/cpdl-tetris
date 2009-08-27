@@ -12,7 +12,8 @@ Tabuleiro::Tabuleiro(QWidget *parent)
     qDebug() << "Conectando Signal do timer...";
 
     this->timer = new QTimer(this);
-    this->timer2 = new QTimer(this);
+
+    connect(this, SIGNAL(keyPressed(int)), this, SLOT(onKeyPress(int)));
 }
 
 Tabuleiro::~Tabuleiro()
@@ -20,6 +21,31 @@ Tabuleiro::~Tabuleiro()
     delete ui;
 }
 
+void
+Tabuleiro::onKeyPress( int _tecla )
+{
+    switch( _tecla )
+    {
+        case Qt::Key_Left:
+                this->currentPiece->moveEsquerda();
+            break;
+        case Qt::Key_Down:
+            this->currentPiece->desce();
+            break;
+        case Qt::Key_Right:
+            this->currentPiece->moveDireita();
+            break;
+        case Qt::Key_Up:
+            this->currentPiece->rotaciona();
+            break;
+    }
+}
+
+void
+Tabuleiro::keyPressEvent( QKeyEvent* _evento )
+{
+    emit this->keyPressed( _evento->key() );
+}
 
 void
 Tabuleiro::rotacionapeca( )
@@ -67,24 +93,23 @@ Tabuleiro::startjogo( qint8 descendo, qint8 proxima )
     qDebug() << "    Instanciando Preview...";
     this->previewPiece = new Tab::Pivo( proxima, QColor(0,0,0), pos1, this->ui->piecePreview );
 
-//    this->caralho = new QRadioButton( this->ui->piecesContainer );
-//    QPalette
-//    pal;
-//
-//    this->caralho->resize( Tab::P_SIZE );
-//    this->caralho->setEnabled(false);
-//
-//    pal.setColor(QPalette::Button, "black");
-//    this->caralho->setPalette(pal);
-//
-//    this->caralho->move( 60, 200 );
-//    this->caralho->show();
+    this->caralho = new QRadioButton( this->ui->piecesContainer );
+    QPalette
+    pal;
+
+    this->caralho->resize( Tab::P_SIZE );
+    this->caralho->setEnabled(false);
+
+    pal.setColor(QPalette::Button, "black");
+    this->caralho->setPalette(pal);
+
+    this->caralho->move( 60, 200 );
+    this->caralho->show();
 
     connect(this->timer, SIGNAL(timeout()), this->currentPiece, SLOT(desce()));
     connect(this->currentPiece, SIGNAL(colidiu()), this, SLOT(colidiu()));
     this->timer->start(1000);
-    connect(this->timer2, SIGNAL(timeout()), this->currentPiece, SLOT(rotaciona()));
-    this->timer2->start(2000);
+
 }
 
 void
