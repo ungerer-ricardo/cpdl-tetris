@@ -5,12 +5,10 @@
 
 int main( int argc, char* argv[] )
 {
-    qDebug() << "mandando ver nos testes...";
-
     QApplication app( argc, argv );
 
     Rede_Server::Roteador
-    novo_roteador;
+    novo_roteador(3);
 
     return app.exec();
 }

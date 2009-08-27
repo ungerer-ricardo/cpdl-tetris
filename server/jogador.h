@@ -18,6 +18,9 @@ namespace Rede_Server
 
         ~Jogador();
 
+        unsigned int
+        id_jogador;
+
     signals:
 
         void
@@ -32,7 +35,7 @@ namespace Rede_Server
         erroConexao( QAbstractSocket::SocketError _erro );
 
         void
-        enviaDado( QString& _dado );
+        enviaDado( QString _dado );
 
         void
         dadoChegando();

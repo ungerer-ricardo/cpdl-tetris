@@ -3,6 +3,7 @@
 
 #include <QList>
 #include <QObject>
+#include <QTime>
 
 #include "./jogador.h"
 #include "./ouvinte.h"
@@ -14,7 +15,7 @@ namespace Rede_Server
         Q_OBJECT
     public:
 
-        Roteador( QObject* _parent = 0 );
+        Roteador( int _njogadores, QObject* _parent = 0 );
 
         ~Roteador();
 
@@ -34,6 +35,11 @@ namespace Rede_Server
         void
         jogadorCaiu( Jogador* _com_erro );
 
+    protected:
+
+        void
+        startJogo();
+
     private:
 
         QList<Jogador*>
@@ -41,6 +47,12 @@ namespace Rede_Server
 
         Ouvinte*
         ouvinte;
+
+        unsigned int
+        njogadores;
+
+        unsigned int
+        current_id;
 
     signals:
 

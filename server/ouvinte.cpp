@@ -24,7 +24,7 @@ bool
 Ouvinte::startListen()
 {
     qint16
-    porta = 9999;
+    porta = 6969;
 
     this->listen( QHostAddress::Any, porta );
 
@@ -43,13 +43,12 @@ Ouvinte::startListen()
 void
 Ouvinte::incomingConnection( int _socket_descriptor )
 {
+    qDebug() << "Ouvinte: novo jogador";
+
     Jogador*
     novo_jogador;
 
     novo_jogador = new Jogador( _socket_descriptor, 0 );
-
-
-
 
     emit this->novoJogador( novo_jogador );
 }

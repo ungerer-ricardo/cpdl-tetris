@@ -36,14 +36,16 @@ Jogador::erroConexao( QAbstractSocket::SocketError _erro )
 {
     Q_UNUSED( _erro );
 
-    qWarning() << "Jogador : ih! A conexão caiu!";
+    qWarning() << "Jogador" << this->id_jogador << ": ih! A conexão caiu: "
+               << this->conexao->errorString();
+
     this->conexao->close();
 
     emit this->erro(this);
 }
 
 void
-Jogador::enviaDado( QString& _dado )
+Jogador::enviaDado( QString _dado )
 {
     if ( this->conexao->isWritable() )
     {
@@ -55,12 +57,16 @@ Jogador::enviaDado( QString& _dado )
         out.device()->seek(0);
         out << (quint16)(block.size() - sizeof(quint16));
 
-        qDebug() << "Jogador: escrevendo dados na placa";
+        qDebug() << "Jogador " << this->id_jogador << ": escrevendo dados";
+
+        this->conexao->flush();
         this->conexao->write( block );
+        this->conexao->flush();
+
     }
     else
     {
-        qDebug() << "Jogador: nao pude escrever";
+        qDebug() << "Jogador" << this->id_jogador << ": nao pude escrever";
         this->erroConexao( QAbstractSocket::NetworkError );
     }
 }
@@ -72,12 +78,10 @@ Jogador::dadoChegando()
     QDataStream in(this->conexao);
     in.setVersion(QDataStream::Qt_4_0);
 
-    if (bloco == 0) {
-        if (this->conexao->bytesAvailable() < (int)sizeof(quint16))
-            return; //erro ao ler pacote
+    if (this->conexao->bytesAvailable() < sizeof(quint16))
+        return; //erro ao ler pacote
 
-        in >> bloco;
-    }
+    in >> bloco;
 
     if ( this->conexao->bytesAvailable() < bloco )
         return; //erro ao ler pacote
@@ -85,6 +89,6 @@ Jogador::dadoChegando()
     QString mensagem;
     in >> mensagem;
 
-    qDebug() << "Jogador: Chegou um dado aqui hein: "<< mensagem;
+    qDebug() << "Jogador" << this->id_jogador << ": Chegou um dado: "<< mensagem;
     emit this->novoDado(mensagem);
 }
