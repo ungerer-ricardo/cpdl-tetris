@@ -40,6 +40,12 @@ class Tabuleiro : public QWidget
         void
         onKeyPress( int );
 
+        void
+        procuraLinhasCheias( );
+
+        void
+        apagaLinhaCheia( Tab::XyView );
+
     signals:
         void
         encaixe( );
@@ -52,6 +58,12 @@ class Tabuleiro : public QWidget
     #endif
         void
         keyPressed( int );
+
+        void
+        linhaCheia( Tab::XyView );
+
+        void
+        procuraLinhas( );
 
     protected:
         void
@@ -69,6 +81,9 @@ class Tabuleiro : public QWidget
 
         Tab::Pivo*
         previewPiece;
+
+        void
+        desceLinhas( Tab::XyView );
 
     private:
         Ui::Tabuleiro *ui;

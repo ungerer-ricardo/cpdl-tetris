@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QTime>
 
 #include "tabuleiro.h"
 #include "ui_tabuleiro.h"
@@ -13,7 +14,9 @@ Tabuleiro::Tabuleiro(QWidget *parent)
 
     this->timer = new QTimer(this);
 
-    connect(this, SIGNAL(keyPressed(int)), this, SLOT(onKeyPress(int)));
+    connect( this, SIGNAL(keyPressed(int)), this, SLOT(onKeyPress(int)) );
+    connect( this, SIGNAL(linhaCheia(Tab::XyView)), this, SLOT(apagaLinhaCheia(Tab::XyView)) );
+    connect( this, SIGNAL(procuraLinhas()), this, SLOT(procuraLinhasCheias()) );
 }
 
 Tabuleiro::~Tabuleiro()
@@ -48,6 +51,100 @@ Tabuleiro::keyPressEvent( QKeyEvent* _evento )
 }
 
 void
+Tabuleiro::procuraLinhasCheias( )
+{
+    QWidget*
+    objeto;
+
+    unsigned short int
+    elementosNaLinha;
+
+    Tab::XyView
+    posicaoAVerificar;
+
+    posicaoAVerificar.setY( (Tab::P_SIZE.height()*24) );
+
+    while( posicaoAVerificar.y() >= 0 )
+    {
+        elementosNaLinha = 0;
+        posicaoAVerificar.setX( 0 );
+
+        while( posicaoAVerificar.x() <= (Tab::P_SIZE.width()*9) )
+        {
+            objeto = this->ui->piecesContainer->childAt( posicaoAVerificar );
+
+            if( objeto != 0 )
+            {
+                ++elementosNaLinha;
+            }
+            posicaoAVerificar.rx() += Tab::P_SIZE.width();
+        }
+
+        if(elementosNaLinha == 10)
+        {
+            emit this->apagaLinhaCheia( posicaoAVerificar );
+            posicaoAVerificar.setY( (Tab::P_SIZE.height()*24) );
+        }
+        else
+        {
+            posicaoAVerificar.ry() -= Tab::P_SIZE.height();
+        }
+    }
+}
+
+void
+Tabuleiro::apagaLinhaCheia( Tab::XyView _posicaoAApagar )
+{
+    QWidget*
+    objeto;
+
+    _posicaoAApagar.setX( 0 );
+
+    while( _posicaoAApagar.x() <= (Tab::P_SIZE.width()*9) )
+    {
+        objeto = this->ui->piecesContainer->childAt( _posicaoAApagar );
+
+        delete objeto;
+
+        _posicaoAApagar.rx() += Tab::P_SIZE.width();
+    }
+
+    this->desceLinhas( _posicaoAApagar );
+}
+
+void
+Tabuleiro::desceLinhas( Tab::XyView _posicao )
+{
+    QWidget*
+    objeto;
+
+    Tab::XyView
+    novaPosicao;
+
+    while( _posicao.y() >= 0 )
+    {
+        _posicao.setX( 0 );
+
+        while( _posicao.x() <= (Tab::P_SIZE.width()*9) )
+        {
+            objeto = this->ui->piecesContainer->childAt( _posicao );
+
+            if( objeto != 0 )
+            {
+                novaPosicao = _posicao;
+                novaPosicao.ry() += Tab::P_SIZE.height();
+
+                objeto->move( novaPosicao );
+            }
+
+            _posicao.rx() += Tab::P_SIZE.width();
+        }
+
+        _posicao.ry() -= Tab::P_SIZE.height();
+    }
+}
+
+void
 Tabuleiro::rotacionapeca( )
 {
     qDebug() << "Signal para rotacionar recebido...";
@@ -60,8 +157,13 @@ Tabuleiro::colidiu( )
     qDebug() << "Signal de colisao recebido...";
     this->timer->disconnect( this->currentPiece, SLOT(desce()) );
 
-    this->novapeca( (rand()%7)+1 );
+    emit this->procuraLinhas( );
+
+    qsrand( QTime::currentTime().msec() );
+    this->novapeca( (qrand() % 7) + 1 );
 }
+
+
 
 void
 Tabuleiro::movepeca( bool _direcao )
@@ -89,7 +191,7 @@ Tabuleiro::startjogo( qint8 descendo, qint8 proxima )
     pos1(30,30);
 
     qDebug() << "    Instanciando Peca...";
-    this->currentPiece = new Tab::Pivo( descendo, QColor("red"), pos, this->ui->piecesContainer );
+    this->currentPiece = new Tab::Pivo( descendo, QColor(0,0,0), pos, this->ui->piecesContainer );
 
     qDebug() << "    Instanciando Preview...";
     this->previewPiece = new Tab::Pivo( proxima, QColor(0,0,0), pos1, this->ui->piecePreview );
@@ -112,11 +214,11 @@ Tabuleiro::novapeca( qint8 nova )
     pos1(60,60);
 
     qDebug() << "    Movendo a previsualizacao da peca para a peca corrente...";
-    this->currentPiece = new Tab::Pivo( this->previewPiece->getPecaInt(), QColor("red"), pos1, this->ui->piecesContainer );
+    this->currentPiece = new Tab::Pivo( this->previewPiece->getPecaInt(), QColor(0,0,0), pos1, this->ui->piecesContainer );
 
     qDebug() << "    Instanciando nova previsualizacao...";
     delete this->previewPiece;
-    this->previewPiece = new Tab::Pivo( nova, QColor("red"), pos, this->ui->piecePreview );
+    this->previewPiece = new Tab::Pivo( nova, QColor(0,0,0), pos, this->ui->piecePreview );
 
     qDebug() << "Conectando Signal do timer...";
     connect(this->timer, SIGNAL(timeout()), this->currentPiece, SLOT(desce()));

@@ -6,7 +6,7 @@ Tab::Pecinha::Pecinha( QColor _cor,
                              QWidget* _parent,
                              Tab::Xy const* _posicaoRelativa ) : QWidget( _parent )
 {
-    this->visualizacao = new QRadioButton( _parent );
+    this->visualizacao = new QPushButton( _parent );
 
     QPalette
     pal;

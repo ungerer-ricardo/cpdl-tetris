@@ -165,11 +165,11 @@ Tab::Pivo::possoColocarAqui( Tab::TipoPeca _novasPosicoes, Tab::XyView _posicaoR
         posicaoAVerificar.setX( (_posicaoRealPivo.x() + (posicao->first*Tab::P_SIZE.width())) );
         posicaoAVerificar.setY( (_posicaoRealPivo.y() + (posicao->second*Tab::P_SIZE.height())) );
 
-        objeto = this->parentWidget()->childAt( posicaoAVerificar );
+        objeto = this->parentWidget( )->childAt( posicaoAVerificar );
 
         if( (
                 (posicaoAVerificar.x() < 0) ||
-                (posicaoAVerificar.x() > 180)
+                (posicaoAVerificar.x() > (Tab::P_SIZE.width()*9))
             ) ||
             (
                 (objeto != 0) &&
@@ -179,7 +179,7 @@ Tab::Pivo::possoColocarAqui( Tab::TipoPeca _novasPosicoes, Tab::XyView _posicaoR
                 (objeto != this->visualizacao)
             ) ||
             (
-                (posicaoAVerificar.y() > 480)
+                (posicaoAVerificar.y() > (Tab::P_SIZE.height()*24))
             )
           )
         {
