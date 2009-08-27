@@ -3,5 +3,5 @@
 Make*
 *user
 *moc*
-server
-tests
+server/server
+server/tests/tests
