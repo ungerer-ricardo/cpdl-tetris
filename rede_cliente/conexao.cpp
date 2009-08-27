@@ -35,6 +35,7 @@ Conexao::enviaDado(QString _dado)
         saida.device()->seek(0);
         saida << (quint16)(bloco.size() - sizeof(quint16));
 
+        this->flush();
         this->write(bloco);
     }
 
@@ -72,5 +73,5 @@ Conexao::recebeDado()
 
     qDebug() << mensagem;
 
-    emit this->incommingMessage(mensagem);
+    emit this->outgoingMessage(mensagem);
 }

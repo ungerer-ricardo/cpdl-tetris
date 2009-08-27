@@ -12,7 +12,8 @@ namespace Rede_Cliente
         DOWN,
         CHAT,
         STAR,
-        BUTT
+        BUTT,
+        ENCA
     };
 
     typedef struct {
@@ -32,13 +33,28 @@ namespace Rede_Cliente
         void
         setConexao(Conexao *);
 
+        void
+        setConexao(QString, quint16);
+
     public slots:
 
         void
         chat(QString);
 
         void
-        incommingMessage(QString);
+        rotacao();
+
+        void
+        movimentaDireita();
+
+        void
+        movimentaEsquerda();
+
+        void
+        encaixe();
+
+        void
+        incomingMessage(QString);
 
     protected:
 
@@ -59,7 +75,18 @@ namespace Rede_Cliente
 
         QString idJogador;
 
+        QWidget *tabuleiro;
+
     signals:
+
+        void
+        startjogo( qint8 descendo, qint8 proxima );
+
+        void
+        novapeca( qint8 nova );
+
+        void
+        button( int );
 
     };
 }

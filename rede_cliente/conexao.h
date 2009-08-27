@@ -34,7 +34,7 @@ namespace Rede_Cliente
     signals:
 
         void
-        incommingMessage(QString);
+        outgoingMessage(QString);
     };
 }
 

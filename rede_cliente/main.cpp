@@ -14,13 +14,9 @@ int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
 
-    Conexao conn;
-
-    conn.conectar("192.168.1.102", 6969);
-
     Tradutor ahh;
 
-    ahh.setConexao(&conn);
+    ahh.setConexao("10.90.150.233", 9999);
 
 
     QLineEdit* linha = new QLineEdit();
