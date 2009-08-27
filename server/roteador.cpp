@@ -73,7 +73,8 @@ Rede_Server::Roteador::recebeDado( QString _dado )
     QString
     comando_str = _dado.left(4).toLower();
 
-    if ( comando_str == "butt" && _dado.right(7) == "encaixe")
+//    if ( comando_str == "butt" && _dado.right(7) == "encaixe")
+    if ( comando_str == "enca" )
     {
         _dado.append(";" + QString::number( qrand() % 7 ) );
     }
