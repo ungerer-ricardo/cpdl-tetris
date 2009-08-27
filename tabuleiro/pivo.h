@@ -23,9 +23,6 @@ namespace Tab
             ~Pivo( );
 
             void
-            seta (QWidget*);
-
-            void
             moveDireita( );
 
             void
@@ -42,6 +39,9 @@ namespace Tab
             void
             mudou( Tab::XyView );
 
+            void
+            colidiu( );
+
         private:
             qint8
             tipoPecaInt;
@@ -55,17 +55,14 @@ namespace Tab
             QColor
             cor;
 
-            Tab::CoordenadaMapaBits
-            ondeEuTo;
-
             Tab::XyView
             ondeEuToExibido;
 
             void
             configuraAgregados( );
 
-            void
-            desenha();
+            bool
+            possoColocarAqui( Tab::TipoPeca, Tab::XyView );
     };
 }
 

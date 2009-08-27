@@ -24,15 +24,15 @@ Tab::Pecinha::Pecinha( QColor _cor,
     this->visualizacao->show();
 }
 
-void
-Tab::Pecinha::setaPai(QWidget* _parent)
-{
-    this->visualizacao->setParent(_parent);
-}
-
 Tab::Pecinha::~Pecinha( )
 {
     delete this->visualizacao;
+}
+
+QWidget const*
+Tab::Pecinha::getVisualizacao( )
+{
+    return this->visualizacao;
 }
 
 void

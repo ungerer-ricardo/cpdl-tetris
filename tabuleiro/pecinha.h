@@ -25,8 +25,9 @@ namespace Tab
 
             ~Pecinha( );
 
-            void
-            setaPai (QWidget*);
+            QWidget const*
+            getVisualizacao( );
+
         public slots:
             void
             moveEu( Tab::XyView );

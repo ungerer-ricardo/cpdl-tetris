@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
     Tabuleiro w;
     w.show();
 
-    w.startjogo(6,5);
+    w.startjogo(6,7);
 
     //w.novapeca(4);
 

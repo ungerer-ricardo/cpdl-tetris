@@ -33,6 +33,9 @@ class Tabuleiro : public QWidget
         void
         novapeca( qint8 nova );
 
+        void
+        colidiu( );
+
     signals:
         void
         encaixe( );
@@ -53,6 +56,9 @@ class Tabuleiro : public QWidget
 
         Tab::Pivo*
         previewPiece;
+
+        QWidget*
+        caralho;
 
     private:
         Ui::Tabuleiro *ui;
