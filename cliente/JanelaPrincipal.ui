@@ -2,13 +2,22 @@
 <ui version="4.0">
  <class>JanelaPrincipal</class>
  <widget class="QWidget" name="JanelaPrincipal">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>643</width>
+    <width>636</width>
     <height>878</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -18,27 +27,13 @@
     <rect>
      <x>30</x>
      <y>20</y>
-     <width>222</width>
+     <width>401</width>
      <height>642</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
-    <item>
-     <widget class="QPushButton" name="pushButton">
-      <property name="minimumSize">
-       <size>
-        <width>220</width>
-        <height>640</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>PushButton</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
+   <layout class="QHBoxLayout" name="tabuleiros_layout"/>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>30</x>
@@ -74,7 +69,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="input_chat"/>
+       <widget class="QLineEdit" name="input_chat">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>

@@ -77,7 +77,7 @@ Tab::Pivo::rotaciona( )
             for( coordenadaPecinha = this->peca.begin(); coordenadaPecinha != this->peca.end(); ++coordenadaPecinha )
             {
                 xVelho = coordenadaPecinha->first;
-                coordenadaPecinha->first = coordenadaPecinha->second;
+                coordenadaPecinha->first = coordenadaPecinhcolidiua->second;
                 coordenadaPecinha->second = -xVelho;
             }
 

@@ -193,9 +193,6 @@ Tabuleiro::colidiu( )
     }
 
     emit this->procuraLinhas( );
-
-    qsrand( QTime::currentTime().msec() );
-    this->novapeca( (qrand() % 7) + 1 );
 }
 
 
