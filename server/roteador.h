@@ -44,9 +44,6 @@ namespace Rede_Server
         void
         setNomeJogador( QString _dado );
 
-        void
-        broadcastNovoNome( quint16 _id_jogador );
-
         quint16
         getIdJogador( QString _dado );
 

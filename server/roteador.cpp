@@ -53,17 +53,12 @@ Rede_Server::Roteador::novoJogador( Jogador* _novo_jogador )
 
     QObject::connect(this,SIGNAL(broadcast(QString)),
                      _novo_jogador,SLOT(enviaDado(QString)));
-
-    if ( this->listaJogadores.size() == this->njogadores )
-    {
-        qDebug() << "roteador:iniciando o jogo!";
-        this->startJogo();
-    }
 }
 
 void
 Rede_Server::Roteador::recebeDado( QString _dado )
 {
+    qDebug() << "Roteador::recebeDado:" << _dado;
     QString
     comando_str = _dado.left(4).toLower();
 
@@ -78,10 +73,11 @@ Rede_Server::Roteador::recebeDado( QString _dado )
 
         this->setNomeJogador( _dado );
         this->enviaListaJogadores( id_jogador );
-        this->broadcastNovoNome( id_jogador );
     }
-
-    emit this->broadcast(_dado);
+    else
+    {
+        emit this->broadcast(_dado);
+    }
 }
 
 void
@@ -134,27 +130,6 @@ Rede_Server::Roteador::setNomeJogador( QString _dado )
     jogador = this->getJogadorById( id_jogador );
 
     jogador->nome_jogador = novo_nome;
-
-    QObject::disconnect(this,SIGNAL(broadcast(QString)),
-                        jogador,SLOT(enviaDado(QString)));
-
-    this->broadcastNovoNome( id_jogador );
-
-    QObject::connect(this, SIGNAL(broadcast(QString)),
-                     jogador,SLOT(enviaDado(QString)));
-}
-
-//não testado.
-void
-Rede_Server::Roteador::broadcastNovoNome( quint16 _id_jogador )
-{
-    QString
-    mensagem = "novo:" +QString::number(_id_jogador)+";";
-
-    Jogador*
-    novo_jogador = this->getJogadorById(_id_jogador);
-
-    mensagem.append(novo_jogador->nome_jogador);
 }
 
 //não testado.
@@ -207,13 +182,10 @@ Rede_Server::Roteador::enviaListaJogadores( quint16 _id_jogador )
           it_jogadores != this->listaJogadores.end();
           it_jogadores++)
     {
-        if ( **it_jogadores != _id_jogador )
-        {
-            entrada_jogador = QString::number((*it_jogadores)->id_jogador)+","+
-                              (*it_jogadores)->nome_jogador;
+        entrada_jogador = QString::number((*it_jogadores)->id_jogador)+";"+
+                          (*it_jogadores)->nome_jogador;
 
-            listaJogadores << entrada_jogador;
-        }
+        listaJogadores << entrada_jogador;
     }
 
     QString
@@ -221,5 +193,12 @@ Rede_Server::Roteador::enviaListaJogadores( quint16 _id_jogador )
 
     msg_lista_jogadores.append( listaJogadores.join(" ") );
 
-    this->getJogadorById(_id_jogador)->enviaDado(msg_lista_jogadores);
+    emit this->broadcast(msg_lista_jogadores);
+
+    if ( this->listaJogadores.size() == this->njogadores )
+    {
+        sleep(3);
+        qDebug() << "roteador:iniciando o jogo!";
+        this->startJogo();
+    }
 }

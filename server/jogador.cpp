@@ -75,7 +75,8 @@ Jogador::enviaDado( QString _dado )
         out.device()->seek(0);
         out << (quint16)(block.size() - sizeof(quint16));
 
-        qDebug() << "Jogador " << this->id_jogador << ": escrevendo dados";
+        qDebug() << "Jogador " << this->id_jogador << ": escrevendo dados"
+                 << _dado;
 
         this->conexao->flush();
         this->conexao->write( block );
