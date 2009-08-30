@@ -1,6 +1,7 @@
 #include "roteador.h"
 
 #include <QDebug>
+#include <QStringList>
 
 Rede_Server::Roteador::Roteador( int _njogadores, QObject* _parent )
         : QObject(_parent)
@@ -48,15 +49,8 @@ Rede_Server::Roteador::novoJogador( Jogador* _novo_jogador )
 
     _novo_jogador->enviaDado(comando_init);
 
-    if ( this->listaJogadores.size() > 0 )
-    {
-        emit this->broadcast(QString("novo"));
-    }
-
     this->listaJogadores.push_back( _novo_jogador );
 
-    //so deve ser adicionado na lista de broadcast depois que todos ja souberem
-    //de sua existencia e que ele saiba da existencia dos outros.
     QObject::connect(this,SIGNAL(broadcast(QString)),
                      _novo_jogador,SLOT(enviaDado(QString)));
 
@@ -73,10 +67,18 @@ Rede_Server::Roteador::recebeDado( QString _dado )
     QString
     comando_str = _dado.left(4).toLower();
 
-//    if ( comando_str == "butt" && _dado.right(7) == "encaixe")
     if ( comando_str == "enca" )
     {
         _dado.append(";" + QString::number( qrand() % 7 ) );
+    }
+    else if ( comando_str == "novo" )
+    {
+        quint16
+        id_jogador = this->getIdJogador(_dado);
+
+        this->setNomeJogador( _dado );
+        this->enviaListaJogadores( id_jogador );
+        this->broadcastNovoNome( id_jogador );
     }
 
     emit this->broadcast(_dado);
@@ -97,6 +99,7 @@ Rede_Server::Roteador::jogadorCaiu( Jogador* _com_erro )
     QString
     comando_caiu( "down:" +  QString::number(id_jogador));
     qDebug() << "Roteador: jogador " << id_jogador << " caiu!";
+
     emit this->broadcast(comando_caiu);
 }
 
@@ -114,4 +117,109 @@ Rede_Server::Roteador::startJogo()
     comando_start.append( QString::number( qrand() % 5 ) );
 
     emit this->broadcast(comando_start);
+}
+
+
+//não testado.
+void
+Rede_Server::Roteador::setNomeJogador( QString _dado )
+{
+    quint16
+    id_jogador = this->getIdJogador( _dado );
+
+    QString
+    novo_nome = _dado.split(";")[1];
+
+    Jogador*
+    jogador = this->getJogadorById( id_jogador );
+
+    jogador->nome_jogador = novo_nome;
+
+    QObject::disconnect(this,SIGNAL(broadcast(QString)),
+                        jogador,SLOT(enviaDado(QString)));
+
+    this->broadcastNovoNome( id_jogador );
+
+    QObject::connect(this, SIGNAL(broadcast(QString)),
+                     jogador,SLOT(enviaDado(QString)));
+}
+
+//não testado.
+void
+Rede_Server::Roteador::broadcastNovoNome( quint16 _id_jogador )
+{
+    QString
+    mensagem = "novo:" +QString::number(_id_jogador)+";";
+
+    Jogador*
+    novo_jogador = this->getJogadorById(_id_jogador);
+
+    mensagem.append(novo_jogador->nome_jogador);
+}
+
+//não testado.
+quint16
+Rede_Server::Roteador::getIdJogador( QString _dado )
+{
+    QString
+    id_str = _dado.split(":")[1].split(";")[0];
+
+    return id_str.toInt();
+}
+
+//não testado.
+Rede_Server::Jogador*
+Rede_Server::Roteador::getJogadorById( quint16 _id_jogador )
+{
+    QList<Rede_Server::Jogador*>::iterator
+    it_jogadores;
+
+    for ( it_jogadores = this->listaJogadores.begin();
+          it_jogadores != this->listaJogadores.end();
+          it_jogadores++ )
+    {
+        if ( **it_jogadores == _id_jogador )
+        {
+            return *it_jogadores;
+        }
+    }
+
+    qWarning() << "Roteador::getJogadorById: nao achei o jogador com a id: "
+               << _id_jogador;
+
+    return NULL;
+}
+
+//não testado.
+void
+Rede_Server::Roteador::enviaListaJogadores( quint16 _id_jogador )
+{
+    QStringList
+    listaJogadores;
+
+    QList<Jogador*>::iterator
+    it_jogadores;
+
+    QString
+    entrada_jogador;
+
+    for ( it_jogadores = this->listaJogadores.begin();
+          it_jogadores != this->listaJogadores.end();
+          it_jogadores++)
+    {
+        if ( **it_jogadores != _id_jogador )
+        {
+            entrada_jogador = QString::number((*it_jogadores)->id_jogador)+","+
+                              (*it_jogadores)->nome_jogador;
+
+            listaJogadores << entrada_jogador;
+        }
+    }
+
+    QString
+    msg_lista_jogadores = "novo:";
+
+    msg_lista_jogadores.append( listaJogadores.join(" ") );
+
+    this->getJogadorById(_id_jogador)->enviaDado(msg_lista_jogadores);
 }

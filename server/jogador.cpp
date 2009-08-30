@@ -31,6 +31,24 @@ Jogador::~Jogador()
     }
 }
 
+bool
+Jogador::operator== ( quint16 _id_jogador )
+{
+    if (this->id_jogador == _id_jogador )
+        return true;
+    else
+        return false;
+}
+
+bool
+Jogador::operator!= ( quint16 _id_jogador )
+{
+    if ( this->id_jogador != _id_jogador )
+        return true;
+    else
+        return false;
+}
+
 void
 Jogador::erroConexao( QAbstractSocket::SocketError _erro )
 {

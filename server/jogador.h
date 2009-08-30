@@ -18,8 +18,17 @@ namespace Rede_Server
 
         ~Jogador();
 
+        bool
+        operator== ( quint16 _id_jogador );
+
+        bool
+        operator!= ( quint16 _id_jogador );
+
         unsigned int
         id_jogador;
+
+        QString
+        nome_jogador;
 
     signals:
 

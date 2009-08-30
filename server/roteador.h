@@ -10,6 +10,7 @@
 
 namespace Rede_Server
 {
+
     class Roteador : public QObject
     {
         Q_OBJECT
@@ -40,6 +41,21 @@ namespace Rede_Server
         void
         startJogo();
 
+        void
+        setNomeJogador( QString _dado );
+
+        void
+        broadcastNovoNome( quint16 _id_jogador );
+
+        quint16
+        getIdJogador( QString _dado );
+
+        Jogador*
+        getJogadorById( quint16 _id_jogador );
+
+        void
+        enviaListaJogadores( quint16 _id_jogador );
+
     private:
 
         QList<Jogador*>
@@ -48,7 +64,7 @@ namespace Rede_Server
         Ouvinte*
         ouvinte;
 
-        unsigned int
+        quint16
         njogadores;
 
         unsigned int
