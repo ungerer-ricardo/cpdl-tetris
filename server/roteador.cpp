@@ -65,6 +65,7 @@ Rede_Server::Roteador::recebeDado( QString _dado )
     if ( comando_str == "enca" )
     {
         _dado.append(";" + QString::number( qrand() % 7 ) );
+        this->broadcast(_dado);
     }
     else if ( comando_str == "novo" )
     {
