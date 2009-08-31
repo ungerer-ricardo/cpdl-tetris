@@ -53,6 +53,9 @@ namespace Rede_Server
         void
         enviaListaJogadores( quint16 _id_jogador );
 
+        QString
+        geraNovaPeca();
+
     private:
 
         QList<Jogador*>

@@ -64,7 +64,7 @@ Rede_Server::Roteador::recebeDado( QString _dado )
 
     if ( comando_str == "enca" )
     {
-        _dado.append(";" + QString::number( qrand() % 7 ) );
+        _dado.append(";" + this->geraNovaPeca() );
         this->broadcast(_dado);
     }
     else if ( comando_str == "novo" )
@@ -110,14 +110,12 @@ Rede_Server::Roteador::startJogo()
     QString
     comando_start("star:");
 
-    comando_start.append( QString::number( qrand() % 5 ) + ";" );
-    comando_start.append( QString::number( qrand() % 5 ) );
+    comando_start.append( this->geraNovaPeca() + ";" );
+    comando_start.append( this->geraNovaPeca() );
 
     emit this->broadcast(comando_start);
 }
 
-
-//não testado.
 void
 Rede_Server::Roteador::setNomeJogador( QString _dado )
 {
@@ -133,7 +131,6 @@ Rede_Server::Roteador::setNomeJogador( QString _dado )
     jogador->nome_jogador = novo_nome;
 }
 
-//não testado.
 quint16
 Rede_Server::Roteador::getIdJogador( QString _dado )
 {
@@ -143,7 +140,6 @@ Rede_Server::Roteador::getIdJogador( QString _dado )
     return id_str.toInt();
 }
 
-//não testado.
 Rede_Server::Jogador*
 Rede_Server::Roteador::getJogadorById( quint16 _id_jogador )
 {
@@ -166,7 +162,6 @@ Rede_Server::Roteador::getJogadorById( quint16 _id_jogador )
     return NULL;
 }
 
-//não testado.
 void
 Rede_Server::Roteador::enviaListaJogadores( quint16 _id_jogador )
 {
@@ -202,4 +197,10 @@ Rede_Server::Roteador::enviaListaJogadores( quint16 _id_jogador )
         qDebug() << "roteador:iniciando o jogo!";
         this->startJogo();
     }
+}
+
+QString
+Rede_Server::Roteador::geraNovaPeca()
+{
+    return QString::number((qrand() % 7 )+ 1);
 }
