@@ -1,28 +1,24 @@
 #include "tradutor.h"
 #include <QStringList>
+#include <QStringListIterator>
+#include <QList>
 
 using namespace Rede_Cliente;
 
-Tradutor::Tradutor(QObject *_parent):QObject(_parent)
+Tradutor::Tradutor(QWidget *_parent):QWidget(_parent)
 {
+    this->conexao = new Conexao(this);
 
+    QObject::connect(this->conexao, SIGNAL(connected()),
+                     this, SLOT(conexaoEstabelecidaInterna()));
+    QObject::connect(this->conexao, SIGNAL(error(QAbstractSocket::SocketError)),
+                     this, SLOT(erroConexaoInterna(QAbstractSocket::SocketError)));
+    QObject::connect(this->conexao, SIGNAL(incommingMessage(QString)),
+                     this, SLOT(incomingMessage(QString)));
 }
 
-void
-Tradutor::setConexao(Conexao *_conexao)
+Tradutor::~Tradutor()
 {
-    this->conexao = _conexao;
-    QObject::connect(this->conexao, SIGNAL(outgoingMessage(QString)), this, SLOT(incomingMessage(QString)));
-
-}
-
-void
-Tradutor::setConexao(QString _ipServidor, quint16 _portaServidor)
-{
-    this->conexao = new Conexao();
-    this->conexao->connectToHost(_ipServidor, _portaServidor);
-    QObject::connect(this->conexao, SIGNAL(outgoingMessage(QString)), this, SLOT(incomingMessage(QString)));
-
 }
 
 void
@@ -33,11 +29,108 @@ Tradutor::chat(QString _mensagem)
 }
 
 void
-Tradutor::rotacao()
+Tradutor::conectar(QString _ipServidor, quint16 _portaServidor, QString _nomeJogador)
+{
+    this->conexao->connectToHost(_ipServidor, _portaServidor);
+    this->nomeJogador = _nomeJogador;
+}
+
+void
+Tradutor::conexaoEstabelecidaInterna()
+{
+    qDebug() << "Tradutor: A Conexao foi estabelecida.";
+    qDebug() << "Tradutor: Jogador: " << this->nomeJogador;
+
+    emit this->conexaoEstabelecida();
+    qDebug() << "Tradutor: Sinal conexaoEstabelecida() emitido.";
+}
+
+void
+Tradutor::desce()
 {
     QString _mensagem;
-    _mensagem = "butt:" + this->idJogador + ";1";
+    _mensagem = "butt:" + this->idJogador + ";4";
     this->conexao->enviaDado(_mensagem);
+}
+
+void
+Tradutor::encaixe()
+{
+    QString _mensagem;
+    _mensagem = "enca:" + this->idJogador;
+    this->conexao->enviaDado(_mensagem);
+}
+
+void
+Tradutor::enviaNome()
+{
+    QString _mensagem;
+    _mensagem = "novo:" + this->idJogador + ";" + this->nomeJogador;
+    this->conexao->enviaDado(_mensagem);
+}
+
+void
+Tradutor::erroConexaoInterna(QAbstractSocket::SocketError _erroConexao)
+{
+    Q_UNUSED(_erroConexao);
+    qWarning() << "Tradutor: Deu merda na conexao: " << this->conexao->errorString();
+
+    emit this->erroConexao(this->conexao->errorString());
+    qDebug() << "Tradutor: Sinal erroConexao() emitido.";
+}
+
+void
+Tradutor::getListaJogadores(QString _listaJogadores)
+{
+    QString
+    jogador = this->idJogador + ";" + this->nomeJogador;
+
+    quint16 id;
+    QString nome;
+
+    qDebug() << "Tradutor::getListaJogadores(): " << _listaJogadores;
+    _listaJogadores = _listaJogadores.split(':')[1];
+    qDebug() << "Tradutor::getListaJogadores(): " << _listaJogadores;
+    qDebug() << "jogador: " << jogador;
+    if(_listaJogadores.split(' ').last() == jogador)
+    {
+        QStringList jogadores = _listaJogadores.split(' ');
+        for(int i=0; i<jogadores.size(); i++)
+        {
+            id = jogadores[i].split(';')[0].toInt();
+            nome = jogadores[i].split(';')[1];
+            emit this->novoJogador(id, nome);
+            qDebug() << "Tradutor::getListaJogadores(): ID: " << id;
+            qDebug() << "Tradutor::getListaJogadores(): Nome: " << nome;
+        }
+    }
+    else
+    {
+        jogador = _listaJogadores.split(' ').last();
+        id = jogador.split(';')[0].toInt();
+        nome = jogador.split(';')[1];
+        emit this->novoJogador(id, nome);
+        qDebug() << "Tradutor::getListaJogadores(): ID: " << id;
+        qDebug() << "Tradutor::getListaJogadores(): Nome: " << nome;
+    }
+}
+
+int
+Tradutor::getPrimeiroParametro(QString _mensagem)
+{
+    return _mensagem.split(':')[1].split(';')[0].toInt();
+}
+
+QString
+Tradutor::getSegundoParametroStr(QString _mensagem)
+{
+    return _mensagem.split(";")[1];
+}
+
+int
+Tradutor::getSegundoParametroInt(QString _mensagem)
+{
+    return this->getSegundoParametroStr(_mensagem).toInt();
 }
 
 void
@@ -57,10 +150,10 @@ Tradutor::movimentaEsquerda()
 }
 
 void
-Tradutor::encaixe()
+Tradutor::rotacao()
 {
     QString _mensagem;
-    _mensagem = "enca:" + this->idJogador;
+    _mensagem = "butt:" + this->idJogador + ";1";
     this->conexao->enviaDado(_mensagem);
 }
 
@@ -70,7 +163,7 @@ Tradutor::incomingMessage(QString _mensagem)
     if(this->idJogador.isEmpty())
     {
         this->idJogador = _mensagem.mid(5);
-        qDebug() << "Id: " << this->idJogador;
+        qDebug() << "Tradutor: Id: " << this->idJogador;
     }
 
     Comando traduzido = this->traduzir(_mensagem);
@@ -78,63 +171,68 @@ Tradutor::incomingMessage(QString _mensagem)
     switch (traduzido.comando)
     {
         case INIT:
-            qDebug() << "Parseado ENUM: " << traduzido.comando;
-            qDebug() << "Parseado ID: " << traduzido.idJogador;
+            qDebug() << "Tradutor: Parseado ENUM: " << traduzido.comando;
+            qDebug() << "Tradutor: Parseado ID: " << traduzido.idJogador;
+            this->enviaNome();
             break;
         case NOVO:
-            qDebug() << "Parseado ENUM:" << traduzido.comando;
+            qDebug() << "Tradutor: Parseado ENUM:" << traduzido.comando;
             break;
         case DOWN:
-            qDebug() << "Parseado ENUM:" << traduzido.comando;
-            qDebug() << "Parseado ID:" << traduzido.idJogador;
+            qDebug() << "Tradutor: Parseado ENUM:" << traduzido.comando;
+            qDebug() << "Tradutor: Parseado ID:" << traduzido.idJogador;
+            emit this->down(traduzido.idJogador);
             break;
         case CHAT:
-            qDebug() << "Parseado ENUM:" << traduzido.comando;
-            qDebug() << "Parseado ID:" << traduzido.idJogador;
-            qDebug() << "Parseado Mensagem:" << traduzido.segundoStr;
+            qDebug() << "Tradutor: Parseado ENUM:" << traduzido.comando;
+            qDebug() << "Tradutor: Parseado ID:" << traduzido.idJogador;
+            qDebug() << "Tradutor: Parseado Mensagem:" << traduzido.segundoStr;
+            emit this->chat(traduzido.idJogador, traduzido.segundoStr);
             break;
         case STAR:
-            qDebug() << "Parseado ENUM:" << traduzido.comando;
-            qDebug() << "Parseado Primeira peca:" << traduzido.idJogador;
-            qDebug() << "Parseado Segunda peca:" << traduzido.segundoInt;
+            qDebug() << "Tradutor: Parseado ENUM:" << traduzido.comando;
+            qDebug() << "Tradutor: Parseado Primeira peca:" << traduzido.idJogador;
+            qDebug() << "Tradutor: Parseado Segunda peca:" << traduzido.segundoInt;
             emit this->startjogo(traduzido.idJogador, traduzido.segundoInt);
             break;
         case BUTT:
-            qDebug() << "Parseado ENUM:" << traduzido.comando;
-            qDebug() << "Parseado ID:" << traduzido.idJogador;
-            qDebug() << "Parseado Botao:" << traduzido.segundoInt;
+            qDebug() << "Tradutor: Parseado ENUM:" << traduzido.comando;
+            qDebug() << "Tradutor: Parseado ID:" << traduzido.idJogador;
+            qDebug() << "Tradutor: Parseado Botao:" << traduzido.segundoInt;
             switch (traduzido.segundoInt)
-            case 1:
-                //sinal para rotacionar
-                emit this->button(Qt::Key_Up);
-                break;
-            case 2:
-                //sinal move direita
-                emit this->button(Qt::Key_Right);
-                break;
-            case 3:
-                //sinal move esquerda
-                emit this->button(Qt::Key_Left);
-                break;
-            case 4:
-                //sinal desce
-                emit this->button(Qt::Key_Down);
-                break;
-            default:
-                qDebug() << "deu zica na parada";
-                break;
+            {
+                case 1:
+//                    emit this->button(Qt::Key_Up);
+                    emit this->rotacionaPeca(traduzido.idJogador);
+                    break;
+                case 2:
+//                    emit this->button(Qt::Key_Right);
+                    emit this->movePecaDireita(traduzido.idJogador);
+                    break;
+                case 3:
+//                    emit this->button(Qt::Key_Left);
+                    emit this->movePecaEsquerda(traduzido.idJogador);
+                    break;
+                case 4:
+//                    emit this->button(Qt::Key_Down);
+                    emit this->descePeca(traduzido.idJogador);
+                    break;
+                default:
+                    qDebug() << "Tradutor: deu zica na parada";
+                    break;
+                }
             break;
         case ENCA:
-            qDebug() << "Parseado ENUM:" << traduzido.comando;
-            qDebug() << "Parseado ID:" << traduzido.idJogador;
-            qDebug() << "Parseado Proxima Peca:" << traduzido.segundoInt;
-            emit this->novapeca(traduzido.segundoInt);
+            qDebug() << "Tradutor: Parseado ENUM:" << traduzido.comando;
+            qDebug() << "Tradutor: Parseado ID:" << traduzido.idJogador;
+            qDebug() << "Tradutor: Parseado Proxima Peca:" << traduzido.segundoInt;
+            emit this->novapeca(traduzido.idJogador, traduzido.segundoInt);
             break;
         default:
-            qDebug() << "Parseado ENUM:" << traduzido.comando;
-            qDebug() << "Parseado Primeiro:" << traduzido.idJogador;
-            qDebug() << "Parseado Segundo Int:" << traduzido.segundoInt;
-            qDebug() << "Parseado Segundo String:" << traduzido.segundoStr;
+            qDebug() << "Tradutor: Parseado ENUM:" << traduzido.comando;
+            qDebug() << "Tradutor: Parseado Primeiro:" << traduzido.idJogador;
+            qDebug() << "Tradutor: Parseado Segundo Int:" << traduzido.segundoInt;
+            qDebug() << "Tradutor: Parseado Segundo String:" << traduzido.segundoStr;
             break;
         }
 
@@ -145,7 +243,7 @@ Comando
 Tradutor::traduzir(QString _mensagem)
 {
     QString comando = _mensagem.split(':')[0];
-    qDebug() << "Tradutor: recebi comando: " << comando;
+    qDebug() << "Tradutor: comando a parceado: " << comando;
 
 
     Comando parseado;
@@ -171,6 +269,7 @@ Tradutor::traduzir(QString _mensagem)
     else if(comando == "novo")
     {
         parseado.comando = NOVO;
+        this->getListaJogadores(_mensagem);
     }
     else if(comando == "init")
     {
@@ -188,25 +287,31 @@ Tradutor::traduzir(QString _mensagem)
         parseado.idJogador = this->getPrimeiroParametro(_mensagem);
         parseado.segundoInt = this->getSegundoParametroInt(_mensagem);
     }
-
-
     return parseado;
 }
 
-int
-Tradutor::getPrimeiroParametro(QString _mensagem)
-{
-    return _mensagem.split(':')[1].split(';')[0].toInt();
-}
 
-QString
-Tradutor::getSegundoParametroStr(QString _mensagem)
-{
-    return _mensagem.split(";")[1];
-}
 
-int
-Tradutor::getSegundoParametroInt(QString _mensagem)
-{
-    return this->getSegundoParametroStr(_mensagem).toInt();
-}
+//teste
+//void
+//Tradutor::keyPressEvent(QKeyEvent *key)
+//{
+//    switch(key->key())
+//    {
+//        case Qt::Key_Up:
+//            this->rotacao();
+//            break;
+//        case Qt::Key_Right:
+//            this->movimentaDireita();
+//            break;
+//        case Qt::Key_Left:
+//            this->movimentaEsquerda();
+//            break;
+//        case Qt::Key_Down:
+//            this->desce();
+//            break;
+//        case Qt::Key_Space:
+//            emit this->encaixe();
+//            break;
+//    }
+//}

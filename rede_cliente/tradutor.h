@@ -4,6 +4,9 @@
 #include <QObject>
 #include "conexao.h"
 
+#include <QKeyEvent>
+#include <QWidget>
+
 namespace Rede_Cliente
 {
     enum TipoComando{
@@ -23,26 +26,43 @@ namespace Rede_Cliente
         QString segundoStr;
     }Comando;
 
-    class Tradutor : public QObject
+    class Tradutor : public QWidget
     {
         Q_OBJECT
 
+
     public:
-        Tradutor(QObject * = 0);
 
-        void
-        setConexao(Conexao *);
+        Tradutor(QWidget * = 0);
 
-        void
-        setConexao(QString, quint16);
+        ~Tradutor();
+
 
     public slots:
+
+//        slots de comunicação com a rede
+        void
+        conectar(QString, quint16, QString);
+
+        void
+        conexaoEstabelecidaInterna();
+
+        void
+        erroConexaoInterna(QAbstractSocket::SocketError);
+
+        void
+        incomingMessage(QString);
+
+//        slots de transferencia de mensagens
 
         void
         chat(QString);
 
         void
-        rotacao();
+        desce();
+
+        void
+        encaixe();
 
         void
         movimentaDireita();
@@ -51,15 +71,19 @@ namespace Rede_Cliente
         movimentaEsquerda();
 
         void
-        encaixe();
+        rotacao();
 
-        void
-        incomingMessage(QString);
 
     protected:
 
-        Comando
-        traduzir(QString);
+//        void
+//        keyPressEvent(QKeyEvent*);
+
+        void
+        enviaNome();
+
+        void
+        getListaJogadores(QString);
 
         int
         getPrimeiroParametro(QString);
@@ -70,23 +94,55 @@ namespace Rede_Cliente
         int
         getSegundoParametroInt(QString);
 
+        Comando
+        traduzir(QString);
+
     private:
-        Conexao *conexao;
 
-        QString idJogador;
+        Conexao
+        *conexao;
 
-        QWidget *tabuleiro;
+        QString
+        nomeJogador;
+
+        QString
+        idJogador;
+
 
     signals:
 
         void
-        startjogo( qint8 descendo, qint8 proxima );
+        chat(quint16, QString);
 
         void
-        novapeca( qint8 nova );
+        conexaoEstabelecida();
 
         void
-        button( int );
+        down(quint16);
+
+        void
+        descePeca(quint16);
+
+        void
+        erroConexao(QString);
+
+        void
+        movePecaDireita(quint16);
+
+        void
+        movePecaEsquerda(quint16);
+
+        void
+        novoJogador(quint16, QString);
+
+        void
+        rotacionaPeca(quint16);
+
+        void
+        startjogo(quint16, quint16);
+
+        void
+        novapeca(quint16, quint16);
 
     };
 }

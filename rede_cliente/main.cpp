@@ -14,16 +14,17 @@ int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
 
-    Tradutor ahh;
-
-    ahh.setConexao("10.90.150.233", 9999);
-
-
-    QLineEdit* linha = new QLineEdit();
-
-    QObject::connect(linha, SIGNAL(textEdited(QString)), &ahh, SLOT(chat(QString)));
-
-    linha->show();
+//    Tradutor *tradutor = new Tradutor();
+//    tradutor->conectar("192.168.1.100", 6969, "Joselito");
+//
+//    tradutor->show();
+//
+//
+//    QLineEdit* linha = new QLineEdit();
+//
+//    QObject::connect(linha, SIGNAL(textEdited(QString)), tradutor, SLOT(chat(QString)));
+//
+//    linha->show();
 
     return app.exec();
 }

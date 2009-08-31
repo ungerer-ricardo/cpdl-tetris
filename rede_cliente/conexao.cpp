@@ -1,26 +1,15 @@
 #include "conexao.h"
+#include "tradutor.h"
 
 using namespace Rede_Cliente;
 
-Conexao::Conexao(QObject* _parent):QTcpSocket(_parent)
+Conexao::Conexao(Tradutor* _parent):QTcpSocket(_parent)
 {
-    QObject::connect(this, SIGNAL(connected()), this, SLOT(conectado()));
-    QObject::connect(this, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(erro(QAbstractSocket::SocketError)));
-    QObject::connect(this, SIGNAL(readyRead()), this, SLOT(recebeDado()));
+    QObject::connect(this, SIGNAL(readyRead()),
+                     this, SLOT(recebeDado()));
 }
 
 
-void
-Conexao::conectar(QString _ipServidor, quint16 _portaServidor)
-{
-    this->connectToHost(_ipServidor, _portaServidor);
-}
-
-void
-Conexao::conectado()
-{
-    qDebug() << "Conectado";
-}
 
 void
 Conexao::enviaDado(QString _dado)
@@ -41,20 +30,16 @@ Conexao::enviaDado(QString _dado)
 
     else
     {
-        qDebug() << "Erro ao escrever: o cara é analfabeto.";
+        qDebug() << "Conexao: Erro ao escrever.";
     }
 }
 
-void
-Conexao::erro(QAbstractSocket::SocketError _erroConexao)
-{
-    qWarning() << "Deu merda na conexao: " << this->errorString();
-}
+
 
 void
 Conexao::recebeDado()
 {
-    qDebug() << "Tem dado para ler";
+    qDebug() << "Conexao: Tem dado para ler.";
 
     quint16 bloco = 0;
     QDataStream entrada(this);
@@ -70,8 +55,8 @@ Conexao::recebeDado()
 
     QString mensagem;
     entrada >> mensagem;
+    qDebug() << "Conexao: Dado lido: " << mensagem;
 
-    qDebug() << mensagem;
-
-    emit this->outgoingMessage(mensagem);
+    emit this->incommingMessage(mensagem);
+    qDebug() << "Conexao: Sinal emitido: " << mensagem;
 }

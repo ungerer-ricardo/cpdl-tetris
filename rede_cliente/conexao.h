@@ -5,6 +5,7 @@
 
 namespace Rede_Cliente
 {
+    class Tradutor;
 
     class Conexao : public QTcpSocket
     {
@@ -12,21 +13,12 @@ namespace Rede_Cliente
 
     public:
 
-        Conexao(QObject* = NULL);
+        Conexao(Tradutor*);
 
     public slots:
 
         void
-        conectar(QString, quint16);
-
-        void
-        conectado();
-
-        void
         enviaDado(QString);
-
-        void
-        erro(QAbstractSocket::SocketError);
 
         void
         recebeDado();
@@ -34,7 +26,7 @@ namespace Rede_Cliente
     signals:
 
         void
-        outgoingMessage(QString);
+        incommingMessage(QString);
     };
 }
 
